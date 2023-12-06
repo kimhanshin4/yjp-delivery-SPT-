@@ -10,7 +10,8 @@ public enum Social implements CommonEnum {
     GOOGLE("구글"),
     NAVER("네이버");
 
-    @Getter private final String value;
+    @Getter
+    private final String value;
 
     @Override
     public String getName() {

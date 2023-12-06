@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopLikeEntityId implements Serializable {
+
     private Long userId;
     private Long shopId;
 }

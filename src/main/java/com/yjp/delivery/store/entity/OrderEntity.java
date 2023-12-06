@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "orders")
 public class OrderEntity extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;

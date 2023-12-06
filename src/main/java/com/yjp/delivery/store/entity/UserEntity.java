@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
