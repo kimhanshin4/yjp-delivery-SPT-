@@ -2,9 +2,12 @@ package com.yjp.delivery.controller.admin.menu;
 
 import com.yjp.delivery.common.response.RestResponse;
 import com.yjp.delivery.controller.admin.menu.dto.request.AddMenuReq;
+import com.yjp.delivery.controller.admin.menu.dto.request.UpdateMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.response.AddMenuRes;
+import com.yjp.delivery.controller.admin.menu.dto.response.UpdateMenuRes;
 import com.yjp.delivery.service.AdminMenuService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,5 +23,10 @@ public class AdminMenuController {
     @PostMapping
     public RestResponse<AddMenuRes> addMenu(@RequestBody AddMenuReq addMenuReq) {
         return RestResponse.success(adminMenuService.addMenu(addMenuReq));
+    }
+
+    @PatchMapping
+    public RestResponse<UpdateMenuRes> updateMenu(@RequestBody UpdateMenuReq updateMenuReq) {
+        return RestResponse.success(adminMenuService.updateMenu(updateMenuReq));
     }
 }
