@@ -29,15 +29,16 @@ public class AdminShopService {
   }
 
   public UpdateShopRes updateShop(UpdateShopReq updateShopReq) {
-    ShopEntity shopEntity = shopRepository.findByShopName(updateShopReq.getShopName());
+    ShopEntity shopEntity = shopRepository.findByShopId(updateShopReq.getShopId());
     ShopValidator.validate(shopEntity);
-    shopEntity = ShopEntity.builder()
-        .shopName(updateShopReq.getNewShopName())
-        .description(updateShopReq.getDescription())
-        .location(updateShopReq.getLocation())
-        .callNumber(updateShopReq.getCallNumber())
-        .build();
-    return AdminShopServiceMapper.INSTANCE.toUpdateShopRes(shopEntity);
+    return AdminShopServiceMapper.INSTANCE.toUpdateShopRes(
+        shopRepository.save(ShopEntity.builder()
+            .shopId(updateShopReq.getShopId())
+            .shopName(updateShopReq.getShopName())
+            .description(shopEntity.getDescription())
+            .location(updateShopReq.getLocation())
+            .callNumber(updateShopReq.getCallNumber())
+            .build()));
   }
 
   @Mapper
