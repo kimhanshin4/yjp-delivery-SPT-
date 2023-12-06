@@ -3,8 +3,10 @@ package com.yjp.delivery.service;
 import com.yjp.delivery.common.validator.MenuValidator;
 import com.yjp.delivery.common.validator.ShopValidator;
 import com.yjp.delivery.controller.admin.menu.dto.request.AddMenuReq;
+import com.yjp.delivery.controller.admin.menu.dto.request.DeleteMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.request.UpdateMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.response.AddMenuRes;
+import com.yjp.delivery.controller.admin.menu.dto.response.DeleteMenuRes;
 import com.yjp.delivery.controller.admin.menu.dto.response.UpdateMenuRes;
 import com.yjp.delivery.store.entity.MenuEntity;
 import com.yjp.delivery.store.entity.ShopEntity;
@@ -49,6 +51,19 @@ public class AdminMenuService {
                 .build()));
     }
 
+    public DeleteMenuRes deleteMenu(DeleteMenuReq deleteMenuReq) {
+        ShopEntity shopEntity = shopRepository.findByShopId(deleteMenuReq.getShopId());
+        ShopValidator.validate(shopEntity);
+        MenuEntity menuEntity = menuRepository.findByMenuId(deleteMenuReq.getMenuId());
+        MenuValidator.validate(menuEntity);
+        menuRepository.delete(menuEntity);
+        return AdminMenuServiceMapper.INSTANCE.toDeleteMenuRes(
+            MenuEntity.builder()
+                .menuId(deleteMenuReq.getMenuId())
+                .shopEntity(shopEntity)
+                .build());
+    }
+
     @Mapper
     public interface AdminMenuServiceMapper {
 
@@ -57,5 +72,7 @@ public class AdminMenuService {
         AddMenuRes toAddMenuRes(MenuEntity menuEntity);
 
         UpdateMenuRes toUpdateMenuRes(MenuEntity menuEntity);
+
+        DeleteMenuRes toDeleteMenuRes(MenuEntity menuEntity);
     }
 }
