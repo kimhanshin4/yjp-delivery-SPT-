@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller.sample.dto.response;
+package com.yjp.delivery.controller.review.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewSaveRes {
 
-  private String name;
-  private String text;
+    private String name;
+    private String content;
 }
