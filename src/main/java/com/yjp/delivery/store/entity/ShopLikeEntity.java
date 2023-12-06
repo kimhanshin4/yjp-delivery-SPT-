@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @IdClass(ShopLikeEntityId.class)
 @Table(name = "shop_likes")
 public class ShopLikeEntity {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "userId")

@@ -10,7 +10,8 @@ public enum Role implements CommonEnum {
     USER("유저"),
     GUEST("게스트");
 
-    @Getter private final String value;
+    @Getter
+    private final String value;
 
     @Override
     public String getName() {
