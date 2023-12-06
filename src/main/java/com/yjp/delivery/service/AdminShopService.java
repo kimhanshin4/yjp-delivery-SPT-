@@ -2,8 +2,10 @@ package com.yjp.delivery.service;
 
 import com.yjp.delivery.common.validator.ShopValidator;
 import com.yjp.delivery.controller.admin.shop.dto.request.AddShopReq;
+import com.yjp.delivery.controller.admin.shop.dto.request.DeleteShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.request.UpdateShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.response.AddShopRes;
+import com.yjp.delivery.controller.admin.shop.dto.response.DeleteShopRes;
 import com.yjp.delivery.controller.admin.shop.dto.response.UpdateShopRes;
 import com.yjp.delivery.store.entity.ShopEntity;
 import com.yjp.delivery.store.repository.ShopRepository;
@@ -41,6 +43,15 @@ public class AdminShopService {
             .build()));
   }
 
+  public DeleteShopRes deleteShop(DeleteShopReq deleteShopReq) {
+    ShopEntity shopEntity = shopRepository.findByShopId(deleteShopReq.getShopId());
+    ShopValidator.validate(shopEntity);
+    shopRepository.delete(shopEntity);
+    return AdminShopServiceMapper.INSTANCE.toDeleteShopRes(
+        ShopEntity.builder().shopId(deleteShopReq.getShopId())
+            .build());
+  }
+
   @Mapper
   public interface AdminShopServiceMapper {
 
@@ -49,5 +60,7 @@ public class AdminShopService {
     AddShopRes toAddShopRes(ShopEntity shopEntity);
 
     UpdateShopRes toUpdateShopRes(ShopEntity shopEntity);
+
+    DeleteShopRes toDeleteShopRes(ShopEntity shopEntity);
   }
 }
