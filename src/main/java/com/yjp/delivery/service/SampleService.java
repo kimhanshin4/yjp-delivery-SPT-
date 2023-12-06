@@ -1,9 +1,9 @@
-package com.yjp.delivery.sevice;
+package com.yjp.delivery.service;
 
 import com.yjp.delivery.common.validator.SampleValidator;
-import com.yjp.delivery.controller.sample.dto.request.sample.SampleSaveReq;
-import com.yjp.delivery.controller.sample.dto.response.sample.SampleGetRes;
-import com.yjp.delivery.controller.sample.dto.response.sample.SampleSaveRes;
+import com.yjp.delivery.controller.sample.dto.request.SampleSaveReq;
+import com.yjp.delivery.controller.sample.dto.response.SampleGetRes;
+import com.yjp.delivery.controller.sample.dto.response.SampleSaveRes;
 import com.yjp.delivery.store.entity.SampleEntity;
 import com.yjp.delivery.store.repository.SampleRepository;
 import lombok.RequiredArgsConstructor;
