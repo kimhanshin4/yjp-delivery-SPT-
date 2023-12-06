@@ -7,13 +7,13 @@ import com.yjp.delivery.store.entity.SampleEntity;
 
 public class SampleValidator {
 
-    public static void validate(SampleEntity sampleEntity) {
-        if (checkIsNull(sampleEntity)) {
-            throw new GlobalException(NOT_FOUND_SAMPLE);
-        }
+  public static void validate(SampleEntity sampleEntity) {
+    if (checkIsNull(sampleEntity)) {
+      throw new GlobalException(NOT_FOUND_SAMPLE);
     }
+  }
 
-    private static boolean checkIsNull(SampleEntity sampleEntity) {
-        return sampleEntity == null;
-    }
+  private static boolean checkIsNull(SampleEntity sampleEntity) {
+    return sampleEntity == null;
+  }
 }
