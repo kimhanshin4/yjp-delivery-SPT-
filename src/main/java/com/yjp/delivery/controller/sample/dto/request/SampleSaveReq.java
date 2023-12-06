@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller.sample.dto.response.sample;
+package com.yjp.delivery.controller.sample.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SampleGetRes {
+public class SampleSaveReq {
 
     private String name;
     private String text;

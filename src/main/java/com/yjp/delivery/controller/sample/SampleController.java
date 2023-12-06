@@ -4,10 +4,10 @@ import static com.yjp.delivery.common.meta.ResultCode.SYSTEM_ERROR;
 
 import com.yjp.delivery.common.exception.GlobalException;
 import com.yjp.delivery.common.response.RestResponse;
-import com.yjp.delivery.controller.sample.dto.request.sample.SampleSaveReq;
-import com.yjp.delivery.controller.sample.dto.response.sample.SampleGetRes;
-import com.yjp.delivery.controller.sample.dto.response.sample.SampleSaveRes;
-import com.yjp.delivery.sevice.SampleService;
+import com.yjp.delivery.controller.sample.dto.request.SampleSaveReq;
+import com.yjp.delivery.controller.sample.dto.response.SampleGetRes;
+import com.yjp.delivery.controller.sample.dto.response.SampleSaveRes;
+import com.yjp.delivery.service.SampleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
