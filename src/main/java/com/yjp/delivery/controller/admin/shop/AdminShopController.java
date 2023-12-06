@@ -21,20 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminShopController {
 
-  private final AdminShopService adminShopService;
+    private final AdminShopService adminShopService;
 
-  @PostMapping
-  public RestResponse<AddShopRes> addShop(@RequestBody AddShopReq addShopReq) {
-    return RestResponse.success(adminShopService.addShop(addShopReq));
-  }
+    @PostMapping
+    public RestResponse<AddShopRes> addShop(@RequestBody AddShopReq addShopReq) {
+        return RestResponse.success(adminShopService.addShop(addShopReq));
+    }
 
-  @PatchMapping
-  public RestResponse<UpdateShopRes> updateShop(@RequestBody UpdateShopReq updateShopReq) {
-    return RestResponse.success(adminShopService.updateShop(updateShopReq));
-  }
+    @PatchMapping
+    public RestResponse<UpdateShopRes> updateShop(@RequestBody UpdateShopReq updateShopReq) {
+        return RestResponse.success(adminShopService.updateShop(updateShopReq));
+    }
 
-  @DeleteMapping
-  public RestResponse<DeleteShopRes> deleteShop(@RequestBody DeleteShopReq deleteShopReq) {
-    return RestResponse.success(adminShopService.deleteShop(deleteShopReq));
-  }
+    @DeleteMapping
+    public RestResponse<DeleteShopRes> deleteShop(@RequestBody DeleteShopReq deleteShopReq) {
+        return RestResponse.success(adminShopService.deleteShop(deleteShopReq));
+    }
 }

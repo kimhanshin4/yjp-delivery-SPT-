@@ -18,49 +18,49 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminShopService {
 
-  private final ShopRepository shopRepository;
+    private final ShopRepository shopRepository;
 
-  public AddShopRes addShop(AddShopReq addShopReq) {
-    return AdminShopServiceMapper.INSTANCE.toAddShopRes(
-        shopRepository.save(ShopEntity.builder()
-            .shopName(addShopReq.getShopName())
-            .description(addShopReq.getDescription())
-            .location(addShopReq.getLocation())
-            .callNumber(addShopReq.getCallNumber())
-            .build()));
-  }
+    public AddShopRes addShop(AddShopReq addShopReq) {
+        return AdminShopServiceMapper.INSTANCE.toAddShopRes(
+            shopRepository.save(ShopEntity.builder()
+                .shopName(addShopReq.getShopName())
+                .description(addShopReq.getDescription())
+                .location(addShopReq.getLocation())
+                .callNumber(addShopReq.getCallNumber())
+                .build()));
+    }
 
-  public UpdateShopRes updateShop(UpdateShopReq updateShopReq) {
-    ShopEntity shopEntity = shopRepository.findByShopId(updateShopReq.getShopId());
-    ShopValidator.validate(shopEntity);
-    return AdminShopServiceMapper.INSTANCE.toUpdateShopRes(
-        shopRepository.save(ShopEntity.builder()
-            .shopId(updateShopReq.getShopId())
-            .shopName(updateShopReq.getShopName())
-            .description(shopEntity.getDescription())
-            .location(updateShopReq.getLocation())
-            .callNumber(updateShopReq.getCallNumber())
-            .build()));
-  }
+    public UpdateShopRes updateShop(UpdateShopReq updateShopReq) {
+        ShopEntity shopEntity = shopRepository.findByShopId(updateShopReq.getShopId());
+        ShopValidator.validate(shopEntity);
+        return AdminShopServiceMapper.INSTANCE.toUpdateShopRes(
+            shopRepository.save(ShopEntity.builder()
+                .shopId(updateShopReq.getShopId())
+                .shopName(updateShopReq.getShopName())
+                .description(shopEntity.getDescription())
+                .location(updateShopReq.getLocation())
+                .callNumber(updateShopReq.getCallNumber())
+                .build()));
+    }
 
-  public DeleteShopRes deleteShop(DeleteShopReq deleteShopReq) {
-    ShopEntity shopEntity = shopRepository.findByShopId(deleteShopReq.getShopId());
-    ShopValidator.validate(shopEntity);
-    shopRepository.delete(shopEntity);
-    return AdminShopServiceMapper.INSTANCE.toDeleteShopRes(
-        ShopEntity.builder().shopId(deleteShopReq.getShopId())
-            .build());
-  }
+    public DeleteShopRes deleteShop(DeleteShopReq deleteShopReq) {
+        ShopEntity shopEntity = shopRepository.findByShopId(deleteShopReq.getShopId());
+        ShopValidator.validate(shopEntity);
+        shopRepository.delete(shopEntity);
+        return AdminShopServiceMapper.INSTANCE.toDeleteShopRes(
+            ShopEntity.builder().shopId(deleteShopReq.getShopId())
+                .build());
+    }
 
-  @Mapper
-  public interface AdminShopServiceMapper {
+    @Mapper
+    public interface AdminShopServiceMapper {
 
-    AdminShopServiceMapper INSTANCE = Mappers.getMapper(AdminShopServiceMapper.class);
+        AdminShopServiceMapper INSTANCE = Mappers.getMapper(AdminShopServiceMapper.class);
 
-    AddShopRes toAddShopRes(ShopEntity shopEntity);
+        AddShopRes toAddShopRes(ShopEntity shopEntity);
 
-    UpdateShopRes toUpdateShopRes(ShopEntity shopEntity);
+        UpdateShopRes toUpdateShopRes(ShopEntity shopEntity);
 
-    DeleteShopRes toDeleteShopRes(ShopEntity shopEntity);
-  }
+        DeleteShopRes toDeleteShopRes(ShopEntity shopEntity);
+    }
 }

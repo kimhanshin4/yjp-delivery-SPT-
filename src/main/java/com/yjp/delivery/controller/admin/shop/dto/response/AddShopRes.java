@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AddShopRes {
 
-  private String shopName;
-  private String description;
-  private String location;
-  private String callNumber;
+    private String shopName;
+    private String description;
+    private String location;
+    private String callNumber;
 }

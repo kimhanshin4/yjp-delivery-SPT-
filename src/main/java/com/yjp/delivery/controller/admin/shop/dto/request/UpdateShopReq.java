@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateShopReq {
 
-  private Long shopId;
-  private String shopName;
-  private String description;
-  private String location;
-  private String callNumber;
+    private Long shopId;
+    private String shopName;
+    private String description;
+    private String location;
+    private String callNumber;
 }

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeleteShopRes {
 
-  private Long shopId;
+    private Long shopId;
 }
