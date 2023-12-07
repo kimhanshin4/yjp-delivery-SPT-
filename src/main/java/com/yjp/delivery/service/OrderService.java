@@ -2,8 +2,11 @@ package com.yjp.delivery.service;
 
 import static com.yjp.delivery.common.meta.OrderStatus.COOKING;
 
+import com.yjp.delivery.common.validator.OrderValidator;
 import com.yjp.delivery.common.validator.UserValidator;
+import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
+import com.yjp.delivery.controller.order.dto.response.OrderDeleteRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetAllRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
@@ -73,6 +76,14 @@ public class OrderService {
     public OrderGetResWrapper getOrder(Long orderId) {
         return OrderServiceMapper.INSTANCE.toOrderGetResWrapper(
             orderRepository.findByOrderId(orderId));
+    }
+
+    public OrderDeleteRes deleteOrder(OrderDeleteReq orderDeleteReq) {
+        OrderEntity orderEntity = orderRepository.findByOrderIdAndUserEntityUsername(
+            orderDeleteReq.getOrderId(), orderDeleteReq.getUsername());
+        OrderValidator.validate(orderEntity);
+        orderRepository.delete(orderEntity);
+        return new OrderDeleteRes();
     }
 
     private UserEntity getUserByUsername(String username) {
