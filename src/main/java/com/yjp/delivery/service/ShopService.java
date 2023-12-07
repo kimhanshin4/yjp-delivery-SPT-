@@ -1,12 +1,19 @@
 package com.yjp.delivery.service;
 
 import com.yjp.delivery.common.validator.ShopValidator;
+import com.yjp.delivery.common.validator.UserValidator;
+import com.yjp.delivery.controller.shop.dto.request.ShopLikeReq;
 import com.yjp.delivery.controller.shop.dto.response.MenuGetRes;
 import com.yjp.delivery.controller.shop.dto.response.ShopGetAllRes;
 import com.yjp.delivery.controller.shop.dto.response.ShopGetRes;
+import com.yjp.delivery.controller.shop.dto.response.ShopLikeRes;
 import com.yjp.delivery.store.entity.MenuEntity;
 import com.yjp.delivery.store.entity.ShopEntity;
+import com.yjp.delivery.store.entity.ShopLikeEntity;
+import com.yjp.delivery.store.entity.UserEntity;
+import com.yjp.delivery.store.repository.ShopLikeRepository;
 import com.yjp.delivery.store.repository.ShopRepository;
+import com.yjp.delivery.store.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
@@ -20,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShopService {
 
     private final ShopRepository shopRepository;
+    private final UserRepository userRepository;
+    private final ShopLikeRepository shopLikeRepository;
 
     @Transactional(readOnly = true)
     public ShopGetAllRes getAllShops() {
@@ -36,6 +45,47 @@ public class ShopService {
         ShopEntity shopEntity = shopRepository.findByShopId(shopId);
         ShopValidator.validate(shopEntity);
         return ShopServiceMapper.INSTANCE.toShopGetRes(shopEntity);
+    }
+
+    public ShopLikeRes likeShop(ShopLikeReq shopLikeReq) {
+        ShopEntity shopEntity = getShopEntity(shopLikeReq.getShopId());
+        UserEntity userEntity = getUserEntity(shopLikeReq.getUserId());
+
+        ShopLikeEntity shopLikeEntity = getShopLike(shopEntity, userEntity);
+        ShopValidator.checkAlreadyLiked(shopLikeEntity);
+
+        shopLikeRepository.save(ShopLikeEntity.builder()
+            .shopId(shopEntity)
+            .userId(userEntity)
+            .build());
+        return new ShopLikeRes();
+    }
+
+    public ShopLikeRes unLikeShop(ShopLikeReq shopLikeReq) {
+        ShopEntity shopEntity = getShopEntity(shopLikeReq.getShopId());
+        UserEntity userEntity = getUserEntity(shopLikeReq.getUserId());
+
+        ShopLikeEntity shopLikeEntity = getShopLike(shopEntity, userEntity);
+        ShopValidator.checkNotYetLiked(shopLikeEntity);
+
+        shopLikeRepository.delete(shopLikeEntity);
+        return new ShopLikeRes();
+    }
+
+    private ShopEntity getShopEntity(Long shopId) {
+        ShopEntity shopEntity = shopRepository.findByShopId(shopId);
+        ShopValidator.validate(shopEntity);
+        return shopEntity;
+    }
+
+    private UserEntity getUserEntity(Long userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        UserValidator.validate(userEntity);
+        return userEntity;
+    }
+
+    private ShopLikeEntity getShopLike(ShopEntity shopEntity, UserEntity userEntity) {
+        return shopLikeRepository.findByShopIdAndUserId(shopEntity, userEntity);
     }
 
     @Mapper
