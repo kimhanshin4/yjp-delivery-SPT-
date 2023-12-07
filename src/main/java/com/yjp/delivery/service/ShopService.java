@@ -1,5 +1,6 @@
 package com.yjp.delivery.service;
 
+import com.yjp.delivery.common.validator.ShopValidator;
 import com.yjp.delivery.controller.shop.dto.response.MenuGetRes;
 import com.yjp.delivery.controller.shop.dto.response.ShopGetAllRes;
 import com.yjp.delivery.controller.shop.dto.response.ShopGetRes;
@@ -28,6 +29,13 @@ public class ShopService {
             .shopGetReses(shopGetReses)
             .total(shopGetReses.size())
             .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ShopGetRes getShop(Long shopId) {
+        ShopEntity shopEntity = shopRepository.findByShopId(shopId);
+        ShopValidator.validate(shopEntity);
+        return ShopServiceMapper.INSTANCE.toShopGetRes(shopEntity);
     }
 
     @Mapper
