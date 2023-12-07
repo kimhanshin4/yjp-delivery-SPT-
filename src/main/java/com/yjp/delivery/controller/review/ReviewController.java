@@ -3,10 +3,12 @@ package com.yjp.delivery.controller.review;
 import com.yjp.delivery.common.response.RestResponse;
 import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
+import com.yjp.delivery.controller.review.dto.request.ReviewGetReqUser;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
 import com.yjp.delivery.controller.review.dto.response.ReviewDeleteRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
+import com.yjp.delivery.controller.review.dto.response.ReviewGetResUser;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.service.ReviewService;
@@ -46,6 +48,11 @@ public class ReviewController {
     @GetMapping
     public RestResponse<List<ReviewGetResShop>> getReviews(@RequestBody ReviewGetReqShop req) {
         return RestResponse.success(reviewService.findShopReview(req));
+    }
+
+    @GetMapping("/users")
+    public RestResponse<List<ReviewGetResUser>> getReviews(@RequestBody ReviewGetReqUser req) {
+        return RestResponse.success(reviewService.findUserReview(req));
     }
 
 }

@@ -6,10 +6,12 @@ import com.yjp.delivery.common.validator.ShopValidator;
 import com.yjp.delivery.common.validator.UserValidator;
 import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
+import com.yjp.delivery.controller.review.dto.request.ReviewGetReqUser;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
 import com.yjp.delivery.controller.review.dto.response.ReviewDeleteRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
+import com.yjp.delivery.controller.review.dto.response.ReviewGetResUser;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.store.entity.ReviewEntity;
@@ -51,27 +53,29 @@ public class ReviewService {
             reviewRepository.findByShopEntityShopId(req.getShopId()));
     }
 
-    @Transactional
-    public ReviewUpdateRes updateReview(ReviewUpdateReq req) {
-        ReviewEntity reviewEntity = findReview(req.getReviewId());
-        UserEntity userEntity = findUser(req.getUsername());
-        if (userEntity == reviewEntity.getUserEntity()) {
-            return ReviewServiceMapper.INSTANCE.toReviewUpdateRes(
-                reviewRepository.save(ReviewEntity.builder()
-                    .reviewId(req.getReviewId())
-                    .content(req.getContent())
-                    .imageUrl(req.getImageUrl())
-                    .build()));
-        }
-        throw new IllegalArgumentException("수정 권한이 없는 유저입니다.");
+    public List<ReviewGetResUser> findUserReview(ReviewGetReqUser req) {
+        return ReviewServiceMapper.INSTANCE.toReviewGetResUserList(
+            reviewRepository.findByUserEntityUsername(req.getUsername()));
     }
 
 
-  /*  private ReviewEntity getUserByUsername(String username) {
-        UserEntity userEntity = userRepository.findByUsername(username);
-        UserValidator.validate(userEntity);
-        return userEntity;
-    }*/
+    @Transactional
+    public ReviewUpdateRes updateReview(ReviewUpdateReq req) {
+        ReviewEntity reviewEntity = reviewRepository.findByReviewIdAndUserEntityUsername(
+            req.getReviewId(), req.getUsername());
+        ReviewValidator.validate(reviewEntity);
+        UserEntity userEntity = findUser(req.getUsername());
+        ShopEntity shopEntity = findShop(req.getShopId());
+        return ReviewServiceMapper.INSTANCE.toReviewUpdateRes(
+            reviewRepository.save(ReviewEntity.builder()
+                .reviewId(req.getReviewId())
+                .shopEntity(shopEntity)
+                .content(req.getContent())
+                .imageUrl(req.getImageUrl())
+                .userEntity(userEntity)
+                .build()));
+    }
+
 
     public ReviewDeleteRes deleteReview(ReviewDeleteReq req) {
         ReviewEntity reviewEntity = reviewRepository.findByReviewIdAndUserEntityUsername(
@@ -106,7 +110,6 @@ public class ReviewService {
         ReviewService.ReviewServiceMapper INSTANCE = Mappers.getMapper(
             ReviewService.ReviewServiceMapper.class);
 
-        //ReviewGetRes toReviewGetRes(ReviewEntity reviewEntity);
         List<ReviewGetResShop> toReviewGetResShopList(List<ReviewEntity> reviewEntityList);
 
         @Mapping(source = "userEntity", target = "username")
@@ -115,6 +118,16 @@ public class ReviewService {
         @Mapping(source = "userEntity", target = "username")
         default String toUserName(UserEntity userEntity) {
             return userEntity.getUsername();
+        }
+
+        List<ReviewGetResUser> toReviewGetResUserList(List<ReviewEntity> reviewEntityList);
+
+        @Mapping(source = "shopEntity", target = "shopId")
+        ReviewGetResUser toReviewGetResUser(ReviewEntity reviewEntity);
+
+        @Mapping(source = "shopEntity", target = "shopId")
+        default Long toShopId(ShopEntity shopEntity) {
+            return shopEntity.getShopId();
         }
 
         ReviewSaveRes toReviewSaveRes(ReviewEntity reviewEntity);
