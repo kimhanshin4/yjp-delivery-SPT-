@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>로그인 페이지</title>
 </head>
+
 <style>
   .wrap {
     width: 490px;
@@ -12,7 +13,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     border-radius: 30px;
     box-sizing: border-box;
   }
@@ -28,7 +29,8 @@
     background-size: 240px auto;
     margin-bottom: 20px;
   }
-  .kakao{
+
+  .kakao {
     margin-top: 15px;
     height: 60px;
     border: solid 1px #FEE500;
@@ -41,7 +43,8 @@
     width: 450px;
     display: flex;
   }
-  .kakao_i{
+
+  .kakao_i {
     background: url(resources/images/kakao_login_button.png) no-repeat;
     width: 40px;
     height: 100%;
@@ -49,7 +52,8 @@
     background-position: 50%;
     margin: 0 20px;
   }
-  .kakao_txt{
+
+  .kakao_txt {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -67,11 +71,17 @@
 <body>
 <div class="wrap">
   <div class="title">로그인</div>
-  <a class="kakao" href="https://kauth.kakao.com/oauth/authorize?client_id=4ccfd58a89c4020d6020300338a9cf15&redirect_uri=http://localhost:8080/v1/user/kakao/callback&response_type=code">
+  <a class="kakao"
+     href="https://kauth.kakao.com/oauth/authorize?client_id=4ccfd58a89c4020d6020300338a9cf15&redirect_uri=http://localhost:8080/v1/user/kakao/callback&response_type=code">
 
     <div class="kakao_i"></div>
-    <div class="kakao_txt">카카오톡으로 간편로그인 </div>
+    <div class="kakao_txt">카카오톡으로 간편로그인</div>
   </a>
+  <a class="kakaoLogout"
+     href="https://kauth.kakao.com/oauth/logout?client_id=4ccfd58a89c4020d6020300338a9cf15&logout_redirect_uri=http://localhost:8080/v1/user/kakao/logout-callback">
+    <button>로그아웃</button>
+  </a>
+
 </div>
 </body>
 </html>

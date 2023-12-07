@@ -10,6 +10,7 @@ import com.yjp.delivery.security.JwtUtil;
 import com.yjp.delivery.store.entity.UserEntity;
 import com.yjp.delivery.store.repository.UserRepository;
 import java.net.URI;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -76,6 +77,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
     // HTTP 응답 (JSON) -> 액세스 토큰 파싱
     JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
+//    jsonNode.get("refresh_token").asText();
     return jsonNode.get("access_token").asText(); // asText로 String값 반환 -> accessToken
   }
 
@@ -119,11 +121,11 @@ import org.springframework.web.util.UriComponentsBuilder;
     // DB에 중복된 KakaoEmail 있는지 확인
     String kakaoEmail = kakaoUserInfoGetRes.getEmail();
     UserEntity kakaoUser = userRepository.findByEmail(kakaoEmail).orElse(null);
-
+    String[] usernameArr = kakaoEmail.split("@");
     // 등록된 사용자가 없을 경우
     if (kakaoUser == null) {
       kakaoUser = UserEntity.builder()
-          .username(null)
+          .username(usernameArr[0])
           .email(kakaoEmail)
           .role(Role.USER)
           .profileImageUrl(null)
