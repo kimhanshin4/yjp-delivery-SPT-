@@ -1,7 +1,6 @@
 package com.yjp.delivery.config;
 
-import com.yjp.delivery.security.JwtAuthorizationFilter;
-import com.yjp.delivery.security.JwtUtil;
+import com.yjp.delivery.security.AuthorizationFilter;
 import com.yjp.delivery.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -13,15 +12,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final RestTemplate restTemplate;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
@@ -48,7 +49,7 @@ public class WebSecurityConfig {
             authorizeHttpRequests
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .permitAll() // resources 접근 허용 설정
-                .requestMatchers("/").permitAll() // 메인 페이지 요청 허가
+                .requestMatchers("/**").permitAll() // 메인 페이지 요청 허가
                 .requestMatchers("/v1/user/kakao/**")
                 .permitAll() // '/v1/user/kakao'로 시작하는 요청 모두 접근 허가
                 .anyRequest().authenticated() // 그 외 모든 요청 인증처리
@@ -60,7 +61,7 @@ public class WebSecurityConfig {
 //        );
 
         // 필터 관리
-//        http.addFilterBefore(jwtAuthorizationFilter());
+        http.addFilterBefore(authorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

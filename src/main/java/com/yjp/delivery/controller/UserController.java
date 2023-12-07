@@ -1,8 +1,7 @@
 package com.yjp.delivery.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.yjp.delivery.security.JwtUtil;
-import com.yjp.delivery.sevice.KakaoService;
+import com.yjp.delivery.service.KakaoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +23,9 @@ public class UserController {
     @GetMapping("/v1/user/kakao/callback")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response)
         throws JsonProcessingException {
-        String token = kakaoService.kakaoLogin(code); // (JWT)
+        String token = kakaoService.kakaoLogin(code);
         // cookie에는 공백 문자가 들어갈 수 없어서 substring 해줌
-        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));
+        Cookie cookie = new Cookie("Authorization", token);
         cookie.setPath("/");
         response.addCookie(cookie);
         return "redirect:/";
@@ -34,7 +33,7 @@ public class UserController {
 
     @GetMapping("/v1/user/kakao/logout-callback")
     public String kakaoLogout(HttpServletResponse response) {
-        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, null);
+        Cookie cookie = new Cookie("Authorization", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);

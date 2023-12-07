@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller.sample.dto.request.sample;
+package com.yjp.delivery.controller.admin.menu.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SampleSaveReq {
+public class DeleteMenuReq {
 
-    private String name;
-    private String text;
+    private Long menuId;
+    private Long shopId;
 }
