@@ -45,9 +45,7 @@ public class AdminShopService {
     public DeleteShopRes deleteShop(DeleteShopReq deleteShopReq) {
         ShopEntity shopEntity = findShop(deleteShopReq.getShopId());
         shopRepository.delete(shopEntity);
-        return AdminShopServiceMapper.INSTANCE.toDeleteShopRes(
-            ShopEntity.builder().shopId(deleteShopReq.getShopId())
-                .build());
+        return AdminShopServiceMapper.INSTANCE.toDeleteShopRes(new ShopEntity());
     }
 
     private ShopEntity findShop(Long shopId) {

@@ -1,15 +1,12 @@
 package com.yjp.delivery.controller.admin.shop.dto.response;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@JsonIgnoreProperties
 public class DeleteShopRes {
 
-    private Long shopId;
 }
