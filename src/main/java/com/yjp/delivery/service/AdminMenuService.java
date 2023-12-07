@@ -25,7 +25,7 @@ public class AdminMenuService {
     private final MenuRepository menuRepository;
 
     public AddMenuRes addMenu(AddMenuReq addMenuReq) {
-        ShopEntity shopEntity = getShopEntity(addMenuReq.getShopId());
+        ShopEntity shopEntity = findShop(addMenuReq.getShopId());
         return AdminMenuServiceMapper.INSTANCE.toAddMenuRes(
             menuRepository.save(MenuEntity.builder()
                 .imageUrl(addMenuReq.getImageUrl())
@@ -36,8 +36,8 @@ public class AdminMenuService {
     }
 
     public UpdateMenuRes updateMenu(UpdateMenuReq updateMenuReq) {
-        ShopEntity shopEntity = getShopEntity(updateMenuReq.getShopId());
-        MenuEntity menuEntity = getMenuEntity(updateMenuReq.getMenuId());
+        ShopEntity shopEntity = findShop(updateMenuReq.getShopId());
+        MenuEntity menuEntity = findMenu(updateMenuReq.getMenuId());
         return AdminMenuServiceMapper.INSTANCE.toUpdateMenuRes(
             menuRepository.save(MenuEntity.builder()
                 .menuId(updateMenuReq.getMenuId())
@@ -49,19 +49,19 @@ public class AdminMenuService {
     }
 
     public DeleteMenuRes deleteMenu(DeleteMenuReq deleteMenuReq) {
-        ShopEntity shopEntity = getShopEntity(deleteMenuReq.getShopId());
-        MenuEntity menuEntity = getMenuEntity(deleteMenuReq.getMenuId());
+        ShopEntity shopEntity = findShop(deleteMenuReq.getShopId());
+        MenuEntity menuEntity = findMenu(deleteMenuReq.getMenuId());
         menuRepository.delete(menuEntity);
         return AdminMenuServiceMapper.INSTANCE.toDeleteMenuRes(new MenuEntity());
     }
 
-    private ShopEntity getShopEntity(Long shopId) {
+    private ShopEntity findShop(Long shopId) {
         ShopEntity shopEntity = shopRepository.findByShopId(shopId);
         ShopValidator.validate(shopEntity);
         return shopEntity;
     }
 
-    private MenuEntity getMenuEntity(Long menuId) {
+    private MenuEntity findMenu(Long menuId) {
         MenuEntity menuEntity = menuRepository.findByMenuId(menuId);
         MenuValidator.validate(menuEntity);
         return menuEntity;
