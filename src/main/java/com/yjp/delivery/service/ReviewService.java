@@ -74,16 +74,11 @@ public class ReviewService {
     }*/
 
     public ReviewDeleteRes deleteReview(ReviewDeleteReq req) {
-        UserEntity userEntity = findUser(req.getUsername());
-        ReviewEntity reviewEntity = findReview(req.getReviewId());
-        if (userEntity == reviewEntity.getUserEntity()) {
-            reviewRepository.delete(reviewEntity);
-            return ReviewServiceMapper.INSTANCE.toReviewDeleteRes(
-                ReviewEntity.builder().reviewId(req.getReviewId())
-                    .build());
-        }
-        throw new IllegalArgumentException("해당 권한이 없는 유저입니다");
-
+        ReviewEntity reviewEntity = reviewRepository.findByReviewIdAndUserEntityUsername(
+            req.getReviewId(), req.getUsername());
+        ReviewValidator.validate(reviewEntity);
+        reviewRepository.delete(reviewEntity);
+        return new ReviewDeleteRes();
     }
 
 
