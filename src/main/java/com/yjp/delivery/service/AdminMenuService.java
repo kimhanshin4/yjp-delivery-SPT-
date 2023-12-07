@@ -25,8 +25,7 @@ public class AdminMenuService {
     private final MenuRepository menuRepository;
 
     public AddMenuRes addMenu(AddMenuReq addMenuReq) {
-        ShopEntity shopEntity = shopRepository.findByShopId(addMenuReq.getShopId());
-        ShopValidator.validate(shopEntity);
+        ShopEntity shopEntity = getShopEntity(addMenuReq.getShopId());
         return AdminMenuServiceMapper.INSTANCE.toAddMenuRes(
             menuRepository.save(MenuEntity.builder()
                 .imageUrl(addMenuReq.getImageUrl())
@@ -37,10 +36,8 @@ public class AdminMenuService {
     }
 
     public UpdateMenuRes updateMenu(UpdateMenuReq updateMenuReq) {
-        ShopEntity shopEntity = shopRepository.findByShopId(updateMenuReq.getShopId());
-        ShopValidator.validate(shopEntity);
-        MenuEntity menuEntity = menuRepository.findByMenuId(updateMenuReq.getMenuId());
-        MenuValidator.validate(menuEntity);
+        ShopEntity shopEntity = getShopEntity(updateMenuReq.getShopId());
+        MenuEntity menuEntity = getMenuEntity(updateMenuReq.getMenuId());
         return AdminMenuServiceMapper.INSTANCE.toUpdateMenuRes(
             menuRepository.save(MenuEntity.builder()
                 .menuId(updateMenuReq.getMenuId())
@@ -52,16 +49,26 @@ public class AdminMenuService {
     }
 
     public DeleteMenuRes deleteMenu(DeleteMenuReq deleteMenuReq) {
-        ShopEntity shopEntity = shopRepository.findByShopId(deleteMenuReq.getShopId());
-        ShopValidator.validate(shopEntity);
-        MenuEntity menuEntity = menuRepository.findByMenuId(deleteMenuReq.getMenuId());
-        MenuValidator.validate(menuEntity);
+        ShopEntity shopEntity = getShopEntity(deleteMenuReq.getShopId());
+        MenuEntity menuEntity = getMenuEntity(deleteMenuReq.getMenuId());
         menuRepository.delete(menuEntity);
         return AdminMenuServiceMapper.INSTANCE.toDeleteMenuRes(
             MenuEntity.builder()
                 .menuId(deleteMenuReq.getMenuId())
                 .shopEntity(shopEntity)
                 .build());
+    }
+
+    private ShopEntity getShopEntity(Long shopId) {
+        ShopEntity shopEntity = shopRepository.findByShopId(shopId);
+        ShopValidator.validate(shopEntity);
+        return shopEntity;
+    }
+
+    private MenuEntity getMenuEntity(Long menuId) {
+        MenuEntity menuEntity = menuRepository.findByMenuId(menuId);
+        MenuValidator.validate(menuEntity);
+        return menuEntity;
     }
 
     @Mapper
