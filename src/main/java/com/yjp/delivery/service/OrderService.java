@@ -69,6 +69,12 @@ public class OrderService {
             .build();
     }
 
+    @Transactional(readOnly = true)
+    public OrderGetResWrapper getOrder(Long orderId) {
+        return OrderServiceMapper.INSTANCE.toOrderGetResWrapper(
+            orderRepository.findByOrderId(orderId));
+    }
+
     private UserEntity getUserByUsername(String username) {
         UserEntity userEntity = userRepository.findByUsername(username);
         UserValidator.validate(userEntity);

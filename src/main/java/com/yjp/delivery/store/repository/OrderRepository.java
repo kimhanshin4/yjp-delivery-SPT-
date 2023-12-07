@@ -16,4 +16,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
         + "join ShopEntity s on s.shopId=m.shopEntity.shopId "
         + "where s.shopId= :shopId")
     List<OrderEntity> findByShopId(Long shopId);
+
+    OrderEntity findByOrderId(Long orderId);
 }

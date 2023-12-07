@@ -4,10 +4,12 @@ import com.yjp.delivery.common.response.RestResponse;
 import com.yjp.delivery.controller.order.dto.request.OrderGetAllReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
 import com.yjp.delivery.controller.order.dto.response.OrderGetAllRes;
+import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveResList;
 import com.yjp.delivery.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,5 +37,10 @@ public class OrderController {
             return RestResponse.success(
                 orderService.getAllOrderByShopId(orderGetAllReq.getShopId()));
         }
+    }
+
+    @GetMapping("/{orderId}")
+    public RestResponse<OrderGetResWrapper> getOrder(@PathVariable Long orderId) {
+        return RestResponse.success(orderService.getOrder(orderId));
     }
 }
