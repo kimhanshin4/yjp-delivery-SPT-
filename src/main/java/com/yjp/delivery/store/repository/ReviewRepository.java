@@ -1,6 +1,7 @@
 package com.yjp.delivery.store.repository;
 
 import com.yjp.delivery.store.entity.ReviewEntity;
+import com.yjp.delivery.store.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     ReviewEntity findByReviewId(Long reviewId);
+
+    ReviewEntity findByUserEntity(UserEntity userEntity);
 
 
 }

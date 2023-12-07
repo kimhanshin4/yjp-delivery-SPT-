@@ -1,12 +1,15 @@
 package com.yjp.delivery.controller.review;
 
 import com.yjp.delivery.common.response.RestResponse;
+import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
+import com.yjp.delivery.controller.review.dto.response.ReviewDeleteRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +32,11 @@ public class ReviewController {
     @PatchMapping
     public RestResponse<ReviewUpdateRes> updateReview(@RequestBody ReviewUpdateReq req) {
         return RestResponse.success(reviewService.updateReview(req));
+    }
+
+    @DeleteMapping
+    public RestResponse<ReviewDeleteRes> deleteReview(@RequestBody ReviewDeleteReq req) {
+        return RestResponse.success(reviewService.deleteReview(req));
     }
 
 }
