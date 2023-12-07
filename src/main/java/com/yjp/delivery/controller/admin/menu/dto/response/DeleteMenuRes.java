@@ -1,16 +1,12 @@
 package com.yjp.delivery.controller.admin.menu.dto.response;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@JsonIgnoreProperties
 public class DeleteMenuRes {
 
-    private Long menuId;
-    private Long shorId;
 }

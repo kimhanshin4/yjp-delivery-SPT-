@@ -52,11 +52,7 @@ public class AdminMenuService {
         ShopEntity shopEntity = getShopEntity(deleteMenuReq.getShopId());
         MenuEntity menuEntity = getMenuEntity(deleteMenuReq.getMenuId());
         menuRepository.delete(menuEntity);
-        return AdminMenuServiceMapper.INSTANCE.toDeleteMenuRes(
-            MenuEntity.builder()
-                .menuId(deleteMenuReq.getMenuId())
-                .shopEntity(shopEntity)
-                .build());
+        return AdminMenuServiceMapper.INSTANCE.toDeleteMenuRes(new MenuEntity());
     }
 
     private ShopEntity getShopEntity(Long shopId) {
