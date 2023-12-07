@@ -31,8 +31,7 @@ public class AdminShopService {
     }
 
     public UpdateShopRes updateShop(UpdateShopReq updateShopReq) {
-        ShopEntity shopEntity = shopRepository.findByShopId(updateShopReq.getShopId());
-        ShopValidator.validate(shopEntity);
+        ShopEntity shopEntity = findShop(updateShopReq.getShopId());
         return AdminShopServiceMapper.INSTANCE.toUpdateShopRes(
             shopRepository.save(ShopEntity.builder()
                 .shopId(updateShopReq.getShopId())
@@ -44,12 +43,15 @@ public class AdminShopService {
     }
 
     public DeleteShopRes deleteShop(DeleteShopReq deleteShopReq) {
-        ShopEntity shopEntity = shopRepository.findByShopId(deleteShopReq.getShopId());
-        ShopValidator.validate(shopEntity);
+        ShopEntity shopEntity = findShop(deleteShopReq.getShopId());
         shopRepository.delete(shopEntity);
-        return AdminShopServiceMapper.INSTANCE.toDeleteShopRes(
-            ShopEntity.builder().shopId(deleteShopReq.getShopId())
-                .build());
+        return AdminShopServiceMapper.INSTANCE.toDeleteShopRes(new ShopEntity());
+    }
+
+    private ShopEntity findShop(Long shopId) {
+        ShopEntity shopEntity = shopRepository.findByShopId(shopId);
+        ShopValidator.validate(shopEntity);
+        return shopEntity;
     }
 
     @Mapper
