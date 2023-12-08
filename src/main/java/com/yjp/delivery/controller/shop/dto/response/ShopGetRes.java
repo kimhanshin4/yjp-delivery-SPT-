@@ -17,5 +17,6 @@ public class ShopGetRes {
     private String description;
     private String location;
     private String callNumber;
+    private int like;
     private List<MenuGetRes> menuGetReses;
 }
