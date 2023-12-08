@@ -9,7 +9,8 @@ public enum ResultCode {
     NOT_FOUND_REVIEW(4002, "리뷰 데이터가 없습니다"),
     NOT_FOUND_MENU(5001, "메뉴 데이터가 없습니다."),
     ALREADY_LIKED_SHOP(6000, "이미 좋아요가 눌린 가게입니다."),
-    NOT_YET_LIKED_SHOP(6001, "아직 좋아요를 누르지 않은 가게입니다.");
+    NOT_YET_LIKED_SHOP(6001, "아직 좋아요를 누르지 않은 가게입니다."),
+    NOT_FOUND_FILE(5002, "저장되어 있지 않은 파일입니다.");
 
     private Integer code;
     private String message;
