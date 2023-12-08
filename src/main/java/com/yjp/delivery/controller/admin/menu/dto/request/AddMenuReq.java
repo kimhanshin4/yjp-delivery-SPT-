@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddMenuReq {
-    
-    private String imageUrl;
+
     private String menuName;
     private int price;
     private Long shopId;

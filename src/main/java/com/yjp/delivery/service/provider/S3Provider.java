@@ -20,14 +20,23 @@ public class S3Provider {
     @Value("${cloud.aws.s3.bucket.name}")
     public String bucket;
 
-    public String saveFile(MultipartFile multipartFile, String folderName) throws IOException {
-        String originalFilename =
-            folderName + SEPARATOR + UUID.randomUUID() + multipartFile.getOriginalFilename();
-        createFolder(folderName);
-
+    private static ObjectMetadata setObjectMetadata(MultipartFile multipartFile) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
+        return metadata;
+    }
+
+    public String saveFile(MultipartFile multipartFile, String folderName) throws IOException {
+        if (multipartFile == null || multipartFile.getOriginalFilename() == null) {
+            return null;
+        }
+        String originalFilename = multipartFile.getOriginalFilename();
+        originalFilename = folderName + SEPARATOR + UUID.randomUUID() + originalFilename.substring(
+            originalFilename.lastIndexOf("."));
+        createFolder(folderName);
+
+        ObjectMetadata metadata = setObjectMetadata(multipartFile);
 
         amazonS3.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
         return amazonS3.getUrl(bucket, originalFilename).toString();
@@ -46,5 +55,14 @@ public class S3Provider {
     public void deleteImage(String originalFilename) {
         S3Validator.validate(amazonS3, bucket, originalFilename);
         amazonS3.deleteObject(bucket, originalFilename);
+    }
+
+    public String updateImage(String originalFilename, MultipartFile multipartFile)
+        throws IOException {
+        S3Validator.validate(amazonS3, bucket, originalFilename);
+        ObjectMetadata metadata = setObjectMetadata(multipartFile);
+
+        amazonS3.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+        return amazonS3.getUrl(bucket, originalFilename).toString();
     }
 }
