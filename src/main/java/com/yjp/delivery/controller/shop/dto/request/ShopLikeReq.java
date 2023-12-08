@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller.sample.dto.response;
+package com.yjp.delivery.controller.shop.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewSaveRes {
+public class ShopLikeReq {
 
-  private String name;
-  private String text;
+    private Long userId;
+    private Long shopId;
+    private Boolean isLike;
 }

@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller.sample.dto.request.sample;
+package com.yjp.delivery.controller.menu.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewSaveReq {
+public class MenuGetRes {
 
-  private Long shopId;
-  private String content;
-  private String imageUrl;
+    private String menuName;
+    private String imageUrl;
+    private int price;
+
+
 }

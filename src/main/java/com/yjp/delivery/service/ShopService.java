@@ -6,7 +6,10 @@ import com.yjp.delivery.controller.shop.dto.response.ShopGetAllRes;
 import com.yjp.delivery.controller.shop.dto.response.ShopGetRes;
 import com.yjp.delivery.store.entity.MenuEntity;
 import com.yjp.delivery.store.entity.ShopEntity;
+import com.yjp.delivery.store.entity.ShopLikeEntity;
+import com.yjp.delivery.store.repository.ShopLikeRepository;
 import com.yjp.delivery.store.repository.ShopRepository;
+import com.yjp.delivery.store.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
@@ -20,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShopService {
 
     private final ShopRepository shopRepository;
+    private final UserRepository userRepository;
+    private final ShopLikeRepository shopLikeRepository;
 
     @Transactional(readOnly = true)
     public ShopGetAllRes getAllShops() {
@@ -43,10 +48,16 @@ public class ShopService {
 
         ShopServiceMapper INSTANCE = Mappers.getMapper(ShopServiceMapper.class);
 
+        @Mapping(source = "shopLikeEntities", target = "like")
+        default int toLike(List<ShopLikeEntity> shopLikeEntities) {
+            return shopLikeEntities.size();
+        }
+
         MenuGetRes toMenuGetRes(MenuEntity menuEntity);
 
         List<MenuGetRes> toMenuGetReses(List<MenuEntity> menuEntities);
 
+        @Mapping(source = "shopLikeEntities", target = "like")
         @Mapping(source = "menuEntities", target = "menuGetReses")
         ShopGetRes toShopGetRes(ShopEntity shopEntity);
 
