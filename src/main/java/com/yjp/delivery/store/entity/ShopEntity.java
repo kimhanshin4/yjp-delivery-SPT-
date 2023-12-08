@@ -31,4 +31,7 @@ public class ShopEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "shopEntity", cascade = CascadeType.ALL)
     private List<MenuEntity> menuEntities;
+
+    @OneToMany(mappedBy = "shopId", cascade = CascadeType.ALL)
+    private List<ShopLikeEntity> shopLikeEntities;
 }

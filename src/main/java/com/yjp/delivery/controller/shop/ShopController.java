@@ -5,6 +5,7 @@ import com.yjp.delivery.controller.shop.dto.request.ShopLikeReq;
 import com.yjp.delivery.controller.shop.dto.response.ShopGetAllRes;
 import com.yjp.delivery.controller.shop.dto.response.ShopGetRes;
 import com.yjp.delivery.controller.shop.dto.response.ShopLikeRes;
+import com.yjp.delivery.service.ShopLikeService;
 import com.yjp.delivery.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShopController {
 
     private final ShopService shopService;
+    private final ShopLikeService shopLikeService;
 
     @GetMapping
     public RestResponse<ShopGetAllRes> getAllShops() {
@@ -34,9 +36,9 @@ public class ShopController {
     @PostMapping("/like")
     public RestResponse<ShopLikeRes> likeShop(@RequestBody ShopLikeReq shopLikeReq) {
         if (shopLikeReq.getIsLike()) {
-            return RestResponse.success(shopService.likeShop(shopLikeReq));
+            return RestResponse.success(shopLikeService.likeShop(shopLikeReq));
         } else {
-            return RestResponse.success(shopService.unLikeShop(shopLikeReq));
+            return RestResponse.success(shopLikeService.unLikeShop(shopLikeReq));
         }
     }
 }
