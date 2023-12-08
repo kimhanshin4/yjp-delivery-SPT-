@@ -5,4 +5,6 @@ public interface CommonEnum {
     String getName();
 
     String getValue();
+
+    String getCode();
 }
