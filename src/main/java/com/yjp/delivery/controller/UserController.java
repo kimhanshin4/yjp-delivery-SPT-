@@ -22,7 +22,7 @@ public class UserController {
     @GetMapping("/v1/user/kakao/callback")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response)
         throws JsonProcessingException {
-        String token = kakaoService.kakaoLogin(code);
+        String token = kakaoService.kakaoLogin(code, response);
         response.addHeader("Authorization", token);
 
         return "redirect:/";

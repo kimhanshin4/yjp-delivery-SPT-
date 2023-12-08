@@ -1,5 +1,6 @@
-package com.yjp.delivery.config;
+package com.yjp.delivery.common.config;
 
+import com.yjp.delivery.common.meta.Role;
 import com.yjp.delivery.security.AuthorizationFilter;
 import com.yjp.delivery.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -49,9 +50,10 @@ public class WebSecurityConfig {
             authorizeHttpRequests
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .permitAll() // resources 접근 허용 설정
-                .requestMatchers("/**").permitAll() // 메인 페이지 요청 허가
-                .requestMatchers("/v1/user/kakao/**")
-                .permitAll() // '/v1/user/kakao'로 시작하는 요청 모두 접근 허가
+                .requestMatchers("/").permitAll() // 메인 페이지 요청 허가
+                .requestMatchers("/v1/user/kakao/**").permitAll()
+                .requestMatchers("/v1/shop/like").hasRole(Role.USER.toString())
+                .requestMatchers("/v1/shop").permitAll()
                 .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

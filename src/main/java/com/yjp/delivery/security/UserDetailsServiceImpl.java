@@ -1,6 +1,5 @@
 package com.yjp.delivery.security;
 
-import com.yjp.delivery.common.validator.UserValidator;
 import com.yjp.delivery.store.entity.UserEntity;
 import com.yjp.delivery.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +15,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUsername(username);
-        UserValidator.validate(user);
-
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByEmail(email);
         return new UserDetailsImpl(user);
     }
 }

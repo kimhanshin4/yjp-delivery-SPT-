@@ -8,6 +8,7 @@ import com.yjp.delivery.common.meta.Social;
 import com.yjp.delivery.controller.sample.dto.response.kakao.KakaoUserInfoGetRes;
 import com.yjp.delivery.store.entity.UserEntity;
 import com.yjp.delivery.store.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,20 +29,20 @@ public class KakaoService {
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
 
-    public String kakaoLogin(String code) throws JsonProcessingException {
+    public String kakaoLogin(String code, HttpServletResponse res) throws JsonProcessingException {
         // Step 1 : 인가 코드로 토큰 요청해서 받기
-        String accessToken = getToken(code);
+        String accessToken = getToken(code, res);
 
         // Step 2. : 토큰으로 카카오 사용자 정보 가져오기
         KakaoUserInfoGetRes kakaoUserInfoGetRes = getKaKaoUserInfo(accessToken);
 
-        // Step 3. : 필요시에 회원가입
+        // Step 3. : 필요시에 회원가입 (DB에 저장)
         registerKakaoUserIfNeeded(kakaoUserInfoGetRes);
 
         return "Bearer " + accessToken;
     }
 
-    private String getToken(String code) throws JsonProcessingException {
+    private String getToken(String code, HttpServletResponse res) throws JsonProcessingException {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
             .fromUriString("https://kauth.kakao.com")
@@ -74,8 +75,8 @@ public class KakaoService {
 
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
-//    jsonNode.get("refresh_token").asText();
-        System.out.println(jsonNode.get("expires_in").asText());
+        res.addHeader("RefreshToken", jsonNode.get("refresh_token").asText());
+
         return jsonNode.get("access_token").asText(); // asText로 String값 반환 -> accessToken
     }
 
