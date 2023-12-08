@@ -16,5 +16,5 @@ public class ReviewUpdateReq {
     private Long shopId;
     private String username;
     private String content;
-    private String imageUrl;
 }
+//{"reviewId":"1","shopId":"1" ,"username" : "Test","content":"살려줘"}
