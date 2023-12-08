@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yjp.delivery.common.meta.Role;
 import com.yjp.delivery.common.meta.Social;
-import com.yjp.delivery.common.validator.UserValidator;
 import com.yjp.delivery.controller.sample.dto.response.kakao.KakaoUserInfoGetRes;
 import com.yjp.delivery.store.entity.UserEntity;
 import com.yjp.delivery.store.repository.UserRepository;
@@ -39,7 +38,7 @@ public class KakaoService {
         // Step 3. : 필요시에 회원가입
         registerKakaoUserIfNeeded(kakaoUserInfoGetRes);
 
-        return accessToken;
+        return "Bearer " + accessToken;
     }
 
     private String getToken(String code) throws JsonProcessingException {
@@ -76,6 +75,7 @@ public class KakaoService {
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
 //    jsonNode.get("refresh_token").asText();
+        System.out.println(jsonNode.get("expires_in").asText());
         return jsonNode.get("access_token").asText(); // asText로 String값 반환 -> accessToken
     }
 
@@ -120,7 +120,6 @@ public class KakaoService {
         // DB에 중복된 KakaoEmail 있는지 확인
         String kakaoEmail = kakaoUserInfoGetRes.getEmail();
         UserEntity kakaoUser = userRepository.findByEmail(kakaoEmail);
-        UserValidator.validate(kakaoUser);
 
         String[] usernameArr = kakaoEmail.split("@");
         // 등록된 사용자가 없을 경우

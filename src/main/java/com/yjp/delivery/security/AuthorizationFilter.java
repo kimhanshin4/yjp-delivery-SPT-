@@ -4,16 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.RequestEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j(topic = "토큰 검증 및 인가")
 @RequiredArgsConstructor
@@ -38,45 +35,25 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         HttpServletRequest req,
         HttpServletResponse res,
         FilterChain filterChain) throws ServletException, IOException {
-// 1. 토큰 검증 카카오에 토큰 정보 보기 라는 api 호출
-//https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#get-token-info
-// 2. 토큰이 유효하다면, user의 role로 인가를 해줘야해 근데 그건 말이야, 저 아래에 인증 객체 생성 메서드가 있어.
-
-        Cookie authorizationCookie = Arrays.stream(req.getCookies())
-            .filter(cookie -> cookie.getName().equals("Authorization"))
-            .findFirst()
-            .orElse(null);
-
-        if (authorizationCookie == null) {
+        String accessToken = req.getHeader("Authorization");
+        if (accessToken == null) {
             filterChain.doFilter(req, res);
             return;
         }
 
-        String kakaoToken = authorizationCookie.getValue();
-
         /*
-         * 카카오 api 발송 위치
-         *
-         * 카카오 토큰 유효성 검증
-         *
+         * 토큰 유효성 검증
          * */
-        URI uri = UriComponentsBuilder
-            .fromUriString("https://kapi.kakao.com")
-            .path("/v1/user/access_token_info")
-            .encode()
-            .build()
-            .toUri();
 
+        String uri = "https://kapi.kakao.com/v1/user/access_token_info";
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Authorization: Bearer " + kakaoToken);
-
-        RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
-            .post(uri)
-            .headers(headers)
-            .body(null);
+        headers.add("Authorization", "Bearer " + accessToken);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(headers);
 
         // HTTP 요청 보내기
         ResponseEntity<String> response = restTemplate.exchange(
+            uri,
+            HttpMethod.GET,
             requestEntity,
             String.class
         );
