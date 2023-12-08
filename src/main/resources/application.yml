@@ -29,3 +29,13 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+
+cloud:
+  aws:
+    s3:
+      bucket:
+        name: name
+    credentials:
+      accessKey: key
+      secretKey: key
+    region: where
