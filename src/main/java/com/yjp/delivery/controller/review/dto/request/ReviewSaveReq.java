@@ -14,5 +14,5 @@ public class ReviewSaveReq {
     private Long shopId;
     private String username;
     private String content;
-    private String imageUrl;
+
 }
