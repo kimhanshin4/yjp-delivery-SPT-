@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class UpdateMenuReq {
 
     private Long menuId;
-    private String imageUrl;
     private String menuName;
     private int price;
     private Long shopId;

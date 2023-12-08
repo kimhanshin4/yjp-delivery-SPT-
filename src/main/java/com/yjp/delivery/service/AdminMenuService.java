@@ -8,14 +8,18 @@ import com.yjp.delivery.controller.admin.menu.dto.request.UpdateMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.response.AddMenuRes;
 import com.yjp.delivery.controller.admin.menu.dto.response.DeleteMenuRes;
 import com.yjp.delivery.controller.admin.menu.dto.response.UpdateMenuRes;
+import com.yjp.delivery.service.provider.S3Provider;
 import com.yjp.delivery.store.entity.MenuEntity;
 import com.yjp.delivery.store.entity.ShopEntity;
 import com.yjp.delivery.store.repository.MenuRepository;
 import com.yjp.delivery.store.repository.ShopRepository;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -23,25 +27,39 @@ public class AdminMenuService {
 
     private final ShopRepository shopRepository;
     private final MenuRepository menuRepository;
+    private final S3Provider s3Provider;
 
-    public AddMenuRes addMenu(AddMenuReq addMenuReq) {
+    @Value("${cloud.aws.s3.bucket.url}")
+    private String url;
+
+    public AddMenuRes addMenu(MultipartFile multipartFile, AddMenuReq addMenuReq)
+        throws IOException {
         ShopEntity shopEntity = findShop(addMenuReq.getShopId());
+        String imageUrl = s3Provider.saveFile(multipartFile, "menu");
         return AdminMenuServiceMapper.INSTANCE.toAddMenuRes(
             menuRepository.save(MenuEntity.builder()
-                .imageUrl(addMenuReq.getImageUrl())
+                .imageUrl(imageUrl)
                 .menuName(addMenuReq.getMenuName())
                 .price(addMenuReq.getPrice())
                 .shopEntity(shopEntity)
                 .build()));
     }
 
-    public UpdateMenuRes updateMenu(UpdateMenuReq updateMenuReq) {
+    public UpdateMenuRes updateMenu(MultipartFile multipartFile, UpdateMenuReq updateMenuReq)
+        throws IOException {
         ShopEntity shopEntity = findShop(updateMenuReq.getShopId());
         MenuEntity menuEntity = findMenu(updateMenuReq.getMenuId());
+        String originalFilename = menuEntity.getImageUrl().replace(url, "");
+        String imageUrl;
+        if (multipartFile != null) {
+            imageUrl = s3Provider.updateImage(originalFilename, multipartFile);
+        } else {
+            imageUrl = menuEntity.getImageUrl();
+        }
         return AdminMenuServiceMapper.INSTANCE.toUpdateMenuRes(
             menuRepository.save(MenuEntity.builder()
                 .menuId(updateMenuReq.getMenuId())
-                .imageUrl(updateMenuReq.getImageUrl())
+                .imageUrl(imageUrl)
                 .menuName(updateMenuReq.getMenuName())
                 .price(updateMenuReq.getPrice())
                 .shopEntity(shopEntity)
@@ -51,6 +69,8 @@ public class AdminMenuService {
     public DeleteMenuRes deleteMenu(DeleteMenuReq deleteMenuReq) {
         ShopEntity shopEntity = findShop(deleteMenuReq.getShopId());
         MenuEntity menuEntity = findMenu(deleteMenuReq.getMenuId());
+        String originalFilename = menuEntity.getImageUrl().replace(url, "");
+        s3Provider.deleteImage(originalFilename);
         menuRepository.delete(menuEntity);
         return new DeleteMenuRes();
     }
