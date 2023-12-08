@@ -45,6 +45,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
+        accessToken = accessToken.substring(7);
         /*
          * 토큰 유효성 검증, 카카오에 토큰 정보 보기
          * */

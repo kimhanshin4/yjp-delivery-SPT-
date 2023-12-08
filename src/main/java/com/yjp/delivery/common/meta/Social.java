@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum Social implements CommonEnum {
-    KAKAO("카카오"),
-    GOOGLE("구글"),
-    NAVER("네이버");
+    KAKAO("KAKAO", "카카오"),
+    GOOGLE("GOOGLE", "구글"),
+    NAVER("NAVER", "네이버");
 
+    @Getter
+    private final String code;
     @Getter
     private final String value;
 

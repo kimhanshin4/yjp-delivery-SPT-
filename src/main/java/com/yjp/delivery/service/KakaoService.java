@@ -128,7 +128,7 @@ public class KakaoService {
             kakaoUser = UserEntity.builder()
                 .username(usernameArr[0])
                 .email(kakaoEmail)
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .profileImageUrl(null)
                 .introduction(null)
                 .social(Social.KAKAO)

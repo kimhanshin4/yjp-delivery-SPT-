@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum Role implements CommonEnum {
-    ADMIN("관리자"),
-    USER("유저"),
-    GUEST("게스트");
+    ROLE_ADMIN("ROLE_ADMIN", "관리자"),
+    ROLE_USER("ROLE_USER", "유저"),
+    ROLE_GUEST("ROLE_GUEST", "게스트");
 
+    @Getter
+    private final String code;
     @Getter
     private final String value;
 

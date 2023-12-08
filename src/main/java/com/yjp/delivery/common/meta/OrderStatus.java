@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum OrderStatus implements CommonEnum {
-    COOKING("진행중"),
-    DONE("완료");
+    COOKING("COOKING", "진행중"),
+    DONE("DONE", "완료");
 
+    @Getter
+    private final String code;
     @Getter
     private final String value;
 
