@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller.sample.dto.request.sample;
+package com.yjp.delivery.controller.review.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewSaveReq {
+public class ReviewGetReqUser {
 
-  private Long shopId;
-  private String content;
-  private String imageUrl;
+    private String username;
 }
