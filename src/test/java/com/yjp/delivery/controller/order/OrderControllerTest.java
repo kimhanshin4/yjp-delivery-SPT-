@@ -2,17 +2,20 @@ package com.yjp.delivery.controller.order;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yjp.delivery.controller.BaseMvcTest;
+import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
+import com.yjp.delivery.controller.order.dto.response.OrderDeleteRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
 import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
@@ -124,6 +127,23 @@ class OrderControllerTest extends BaseMvcTest {
                 get("/v1/order")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(orderGetReq))
+                    .principal(userMockPrincipal))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("주문 삭제 테스트")
+    void 주문_삭제() throws Exception {
+        Long orderId = 1L;
+        OrderDeleteReq orderDeleteReq = OrderDeleteReq.builder().orderId(orderId).build();
+        OrderDeleteRes result = new OrderDeleteRes();
+        when(orderService.deleteOrder(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                delete("/v1/order")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(orderDeleteReq))
                     .principal(userMockPrincipal))
             .andDo(print())
             .andExpect(status().isOk());
