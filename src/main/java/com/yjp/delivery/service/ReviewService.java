@@ -149,8 +149,10 @@ public class ReviewService {
             return shopEntity.getShopId();
         }
 
+        @Mapping(source = "userEntity", target = "username")
         ReviewSaveRes toReviewSaveRes(ReviewEntity reviewEntity);
 
+        @Mapping(source = "userEntity", target = "username")
         ReviewUpdateRes toReviewUpdateRes(ReviewEntity reviewEntity);
 
         ReviewDeleteRes toReviewDeleteRes(ReviewEntity reviewEntity);
