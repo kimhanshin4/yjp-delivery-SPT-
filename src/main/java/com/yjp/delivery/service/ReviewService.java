@@ -132,6 +132,7 @@ public class ReviewService {
         List<ReviewGetResShop> toReviewGetResShopList(List<ReviewEntity> reviewEntityList);
 
         @Mapping(source = "userEntity", target = "username")
+        @Mapping(source = "shopEntity", target = "shopId")
         ReviewGetResShop toReviewGetResShop(ReviewEntity reviewEntity);
 
         @Mapping(source = "userEntity", target = "username")
@@ -142,6 +143,7 @@ public class ReviewService {
         List<ReviewGetResUser> toReviewGetResUserList(List<ReviewEntity> reviewEntityList);
 
         @Mapping(source = "shopEntity", target = "shopId")
+        @Mapping(source = "userEntity", target = "username")
         ReviewGetResUser toReviewGetResUser(ReviewEntity reviewEntity);
 
         @Mapping(source = "shopEntity", target = "shopId")
