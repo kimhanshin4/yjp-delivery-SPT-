@@ -2,14 +2,17 @@ package com.yjp.delivery.controller.admin.menu;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.admin.menu.dto.request.AddMenuReq;
+import com.yjp.delivery.controller.admin.menu.dto.request.DeleteMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.request.UpdateMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.response.AddMenuRes;
+import com.yjp.delivery.controller.admin.menu.dto.response.DeleteMenuRes;
 import com.yjp.delivery.controller.admin.menu.dto.response.UpdateMenuRes;
 import com.yjp.delivery.service.AdminMenuService;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 @WebMvcTest(controllers = {AdminMenuController.class})
@@ -119,6 +123,24 @@ class AdminMenuControllerTest extends BaseMvcTest {
                 multipart(HttpMethod.PATCH, "/v1/admin/menu")
                     .file(multipartFile)
                     .file(req))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("메뉴 삭제 테스트")
+    void 메뉴_삭제() throws Exception {
+        Long menuId = 1L;
+        Long shopId = 1L;
+        DeleteMenuReq deleteMenuReq = DeleteMenuReq.builder().menuId(menuId).shopId(shopId).build();
+        DeleteMenuRes result = new DeleteMenuRes();
+
+        when(adminMenuService.deleteMenu(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                delete("/v1/admin/menu")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(deleteMenuReq)))
             .andDo(print())
             .andExpect(status().isOk());
     }
