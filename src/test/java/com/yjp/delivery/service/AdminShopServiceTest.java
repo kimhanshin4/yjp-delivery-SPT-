@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.controller.admin.shop.dto.request.AddShopReq;
+import com.yjp.delivery.controller.admin.shop.dto.request.DeleteShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.request.UpdateShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.response.AddShopRes;
 import com.yjp.delivery.controller.admin.shop.dto.response.UpdateShopRes;
@@ -75,5 +76,22 @@ class AdminShopServiceTest {
         assertThat(updateShopRes.getShopName()).isEqualTo(updatedShopName);
         verify(shopRepository).findByShopId(any());
         verify(shopRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("가게 삭제 테스트")
+    void 가제_삭제() {
+        // given
+        Long shopId = 1L;
+        DeleteShopReq deleteShopReq = DeleteShopReq.builder().shopId(shopId).build();
+        ShopEntity shop = ShopEntity.builder().shopId(shopId).build();
+        when(shopRepository.findByShopId(any())).thenReturn(shop);
+
+        // when
+        adminShopService.deleteShop(deleteShopReq);
+
+        // then
+        verify(shopRepository).findByShopId(any());
+        verify(shopRepository).delete(any());
     }
 }
