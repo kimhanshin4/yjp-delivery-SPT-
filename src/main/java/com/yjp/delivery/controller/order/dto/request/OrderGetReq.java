@@ -1,6 +1,6 @@
 package com.yjp.delivery.controller.order.dto.request;
 
-import java.util.List;
+import com.yjp.delivery.common.meta.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,8 +12,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderSaveReqList {
+public class OrderGetReq {
 
-    private List<OrderSaveReq> orderSaveReqs;
-    private String username;
+    private Long orderId;
+    private Long userId;
+    private Role role;
 }
