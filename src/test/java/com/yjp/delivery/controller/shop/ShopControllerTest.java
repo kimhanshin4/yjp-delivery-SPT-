@@ -78,4 +78,23 @@ class ShopControllerTest extends BaseMvcTest {
             .andDo(print())
             .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("가게 좋아요 취소 테스트")
+    void 가게_좋아요_취소_테스트() throws Exception {
+        Long userId = 1L;
+        Long shopId = 1L;
+        Boolean isLike = false;
+        ShopLikeReq shopLikeReq = ShopLikeReq.builder()
+            .userId(userId).shopId(shopId).isLike(isLike).build();
+        ShopLikeRes result = new ShopLikeRes();
+        when(shopLikeService.unLikeShop(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                post("/v1/shop/like")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(shopLikeReq)))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
 }
