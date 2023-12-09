@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.common.meta.OrderStatus;
+import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
@@ -189,5 +190,26 @@ class OrderServiceTest {
         // then
         assertThat(orderGetResWrapper.getOrderId()).isEqualTo(orderId);
         verify(orderRepository).findByOrderId(any());
+    }
+
+    @Test
+    @DisplayName("주문 삭제 테스트")
+    void 주문_삭제() {
+        // given
+        Long orderId = 1L;
+        String username = "ysys";
+        OrderDeleteReq orderDeleteReq = OrderDeleteReq.builder()
+            .orderId(orderId)
+            .username(username)
+            .build();
+        OrderEntity order = OrderEntity.builder().orderId(orderId).build();
+        when(orderRepository.findByOrderIdAndUserEntityUsername(any(), any())).thenReturn(order);
+
+        // when
+        orderService.deleteOrder(orderDeleteReq);
+
+        // then
+        verify(orderRepository).findByOrderIdAndUserEntityUsername(any(), any());
+        verify(orderRepository).delete(any());
     }
 }
