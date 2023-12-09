@@ -44,4 +44,17 @@ class UserRepositoryTest {
         // then
         assertThat(user).isEqualTo(saveUser);
     }
+
+    @Test
+    @DisplayName("username으로 유저 조회 테스트")
+    void username_유저_조회() {
+        // given
+        String username = "ysys";
+
+        // when
+        UserEntity user = userRepository.findByUsername(username);
+
+        // then
+        assertThat(user).isEqualTo(saveUser);
+    }
 }
