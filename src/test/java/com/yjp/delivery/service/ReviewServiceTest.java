@@ -6,8 +6,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
+import com.yjp.delivery.controller.review.dto.request.ReviewGetReqUser;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
 import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
+import com.yjp.delivery.controller.review.dto.response.ReviewGetResUser;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.service.provider.S3Provider;
 import com.yjp.delivery.store.entity.ReviewEntity;
@@ -102,5 +104,27 @@ class ReviewServiceTest {
         assertThat(reviewGetResShops.get(0).getUsername()).isEqualTo(username);
         assertThat(reviewGetResShops.get(0).getShopId()).isEqualTo(shopId);
         verify(reviewRepository).findByShopEntityShopId(any());
+    }
+
+    @Test
+    @DisplayName("username으로 리뷰 조회 테스트")
+    void username_리뷰_조회() {
+        // given
+        Long shopId = 1L;
+        String username = "ysys";
+        ReviewGetReqUser reviewGetReqUser = ReviewGetReqUser.builder().username(username).build();
+        ShopEntity shop = ShopEntity.builder().shopId(shopId).build();
+        UserEntity user = UserEntity.builder().username(username).build();
+        ReviewEntity review = ReviewEntity.builder().shopEntity(shop).userEntity(user).build();
+        List<ReviewEntity> reviews = List.of(review);
+        when(reviewRepository.findByUserEntityUsername(any())).thenReturn(reviews);
+
+        // when
+        List<ReviewGetResUser> reviewGetResUsers = reviewService.findUserReview(reviewGetReqUser);
+
+        // then
+        assertThat(reviewGetResUsers.get(0).getUsername()).isEqualTo(username);
+        assertThat(reviewGetResUsers.get(0).getShopId()).isEqualTo(shopId);
+        verify(reviewRepository).findByUserEntityUsername(any());
     }
 }
