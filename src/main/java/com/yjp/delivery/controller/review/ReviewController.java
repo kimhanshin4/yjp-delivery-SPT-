@@ -52,7 +52,7 @@ public class ReviewController {
         return RestResponse.success(reviewService.deleteReview(req));
     }
 
-    @GetMapping
+    @GetMapping("/shops")
     public RestResponse<List<ReviewGetResShop>> getReviews(@RequestBody ReviewGetReqShop req) {
         return RestResponse.success(reviewService.findShopReview(req));
     }
