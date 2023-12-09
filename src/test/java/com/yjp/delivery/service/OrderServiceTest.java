@@ -1,12 +1,15 @@
 package com.yjp.delivery.service;
 
+import static com.yjp.delivery.common.meta.Role.ROLE_ADMIN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.common.meta.OrderStatus;
+import com.yjp.delivery.common.meta.Role;
 import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
@@ -171,6 +174,13 @@ class OrderServiceTest {
     void 주문_단건_조회() {
         // given
         Long orderId = 1L;
+        Long userId = 1L;
+        Role role = ROLE_ADMIN;
+        OrderGetReq orderGetReq = OrderGetReq.builder()
+            .orderId(orderId)
+            .userId(userId)
+            .role(role)
+            .build();
         UserEntity user = UserEntity.builder().build();
         ShopEntity shop = ShopEntity.builder().build();
         MenuEntity menu = MenuEntity.builder().shopEntity(shop).build();
@@ -185,7 +195,7 @@ class OrderServiceTest {
         when(orderRepository.findByOrderId(any())).thenReturn(order);
 
         // when
-        OrderGetResWrapper orderGetResWrapper = orderService.getOrder(orderId);
+        OrderGetResWrapper orderGetResWrapper = orderService.getOrder(orderGetReq);
 
         // then
         assertThat(orderGetResWrapper.getOrderId()).isEqualTo(orderId);
@@ -197,19 +207,21 @@ class OrderServiceTest {
     void 주문_삭제() {
         // given
         Long orderId = 1L;
-        String username = "ysys";
+        Long userId = 1L;
+        Role role = ROLE_ADMIN;
         OrderDeleteReq orderDeleteReq = OrderDeleteReq.builder()
             .orderId(orderId)
-            .username(username)
+            .userId(userId)
+            .role(role)
             .build();
         OrderEntity order = OrderEntity.builder().orderId(orderId).build();
-        when(orderRepository.findByOrderIdAndUserEntityUsername(any(), any())).thenReturn(order);
+        when(orderRepository.findByOrderId(any())).thenReturn(order);
 
         // when
         orderService.deleteOrder(orderDeleteReq);
 
         // then
-        verify(orderRepository).findByOrderIdAndUserEntityUsername(any(), any());
+        verify(orderRepository).findByOrderId(any());
         verify(orderRepository).delete(any());
     }
 }
