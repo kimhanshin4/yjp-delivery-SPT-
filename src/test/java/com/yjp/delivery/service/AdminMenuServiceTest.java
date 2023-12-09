@@ -6,7 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.controller.admin.menu.dto.request.AddMenuReq;
+import com.yjp.delivery.controller.admin.menu.dto.request.UpdateMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.response.AddMenuRes;
+import com.yjp.delivery.controller.admin.menu.dto.response.UpdateMenuRes;
 import com.yjp.delivery.service.provider.S3Provider;
 import com.yjp.delivery.store.entity.MenuEntity;
 import com.yjp.delivery.store.entity.ShopEntity;
@@ -57,6 +59,43 @@ class AdminMenuServiceTest {
         assertThat(addMenuRes.getMenuName()).isEqualTo(menuName);
         verify(shopRepository).findByShopId(any());
         verify(s3Provider).saveFile(any(), any());
+        verify(menuRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("메뉴 수정 테스트")
+    void 메뉴_수정() throws IOException {
+        // given
+        Long menuId = 1L;
+        String menuName = "menu";
+        String updatedMenuName = "updatedMenu";
+        MultipartFile multipartFile = null;
+        UpdateMenuReq updateMenuReq = UpdateMenuReq.builder()
+            .menuId(menuId)
+            .menuName(updatedMenuName)
+            .build();
+        ShopEntity shop = ShopEntity.builder().build();
+        MenuEntity menu = MenuEntity.builder()
+            .menuId(menuId)
+            .menuName(menuName)
+            .shopEntity(shop)
+            .build();
+        MenuEntity updatedMenu = MenuEntity.builder()
+            .menuId(menuId)
+            .menuName(updatedMenuName)
+            .shopEntity(shop)
+            .build();
+        when(shopRepository.findByShopId(any())).thenReturn(shop);
+        when(menuRepository.findByMenuId(any())).thenReturn(menu);
+        when(menuRepository.save(any())).thenReturn(updatedMenu);
+
+        // when
+        UpdateMenuRes updateMenuRes = adminMenuService.updateMenu(multipartFile, updateMenuReq);
+
+        // then
+        assertThat(updateMenuRes.getMenuName()).isEqualTo(updatedMenuName);
+        verify(shopRepository).findByShopId(any());
+        verify(menuRepository).findByMenuId(any());
         verify(menuRepository).save(any());
     }
 }
