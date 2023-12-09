@@ -31,12 +31,12 @@ public class AdminShopService {
     }
 
     public UpdateShopRes updateShop(UpdateShopReq updateShopReq) {
-        ShopEntity shopEntity = findShop(updateShopReq.getShopId());
+        findShop(updateShopReq.getShopId());
         return AdminShopServiceMapper.INSTANCE.toUpdateShopRes(
             shopRepository.save(ShopEntity.builder()
                 .shopId(updateShopReq.getShopId())
                 .shopName(updateShopReq.getShopName())
-                .description(shopEntity.getDescription())
+                .description(updateShopReq.getDescription())
                 .location(updateShopReq.getLocation())
                 .callNumber(updateShopReq.getCallNumber())
                 .build()));
