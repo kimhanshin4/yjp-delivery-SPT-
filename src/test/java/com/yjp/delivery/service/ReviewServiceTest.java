@@ -5,7 +5,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
+import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.service.provider.S3Provider;
 import com.yjp.delivery.store.entity.ReviewEntity;
@@ -15,6 +17,7 @@ import com.yjp.delivery.store.repository.ReviewRepository;
 import com.yjp.delivery.store.repository.ShopRepository;
 import com.yjp.delivery.store.repository.UserRepository;
 import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,5 +80,27 @@ class ReviewServiceTest {
         verify(shopRepository).findByShopId(any());
         verify(userRepository).findByUsername(any());
         verify(reviewRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("shopId로 리뷰 조회 테스트")
+    void shopId_리뷰_조회() {
+        // given
+        Long shopId = 1L;
+        String username = "ysys";
+        ReviewGetReqShop reviewGetReqShop = ReviewGetReqShop.builder().shopId(shopId).build();
+        ShopEntity shop = ShopEntity.builder().shopId(shopId).build();
+        UserEntity user = UserEntity.builder().username(username).build();
+        ReviewEntity review = ReviewEntity.builder().shopEntity(shop).userEntity(user).build();
+        List<ReviewEntity> reviews = List.of(review);
+        when(reviewRepository.findByShopEntityShopId(any())).thenReturn(reviews);
+
+        // when
+        List<ReviewGetResShop> reviewGetResShops = reviewService.findShopReview(reviewGetReqShop);
+
+        // then
+        assertThat(reviewGetResShops.get(0).getUsername()).isEqualTo(username);
+        assertThat(reviewGetResShops.get(0).getShopId()).isEqualTo(shopId);
+        verify(reviewRepository).findByShopEntityShopId(any());
     }
 }
