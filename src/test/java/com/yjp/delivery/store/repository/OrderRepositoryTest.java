@@ -1,0 +1,58 @@
+package com.yjp.delivery.store.repository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.yjp.delivery.store.entity.OrderEntity;
+import com.yjp.delivery.store.entity.ShopEntity;
+import com.yjp.delivery.store.entity.UserEntity;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+
+@DataJpaTest
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+class OrderRepositoryTest {
+
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ShopRepository shopRepository;
+    private UserEntity user;
+    private ShopEntity shop;
+    private OrderEntity saveOrder;
+
+    @BeforeEach
+    void setUp() {
+        Long userId = 1L;
+        String username = "ysys";
+        Long shopId = 1L;
+        Long orderId = 1L;
+        user = userRepository.save(UserEntity.builder().userId(userId).username(username).build());
+        shop = shopRepository.save(ShopEntity.builder().shopId(shopId).build());
+        saveOrder = orderRepository.save(OrderEntity.builder()
+            .orderId(orderId)
+            .userEntity(user)
+            .build());
+    }
+
+    @Test
+    @DisplayName("userId로 주문 정보 조회 테스트")
+    void userId_주문_정보_조회() {
+        // given
+        Long userId = user.getUserId();
+
+        // when
+        List<OrderEntity> orders = orderRepository.findByUserEntityUserId(userId);
+
+        // then
+        assertThat(orders.get(0)).isEqualTo(saveOrder);
+    }
+}
