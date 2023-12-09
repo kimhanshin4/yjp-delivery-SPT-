@@ -75,4 +75,19 @@ class S3ProviderTest {
         verify(amazonS3).putObject(any(), any(), any(), any());
         verify(amazonS3).getUrl(any(), any());
     }
+
+    @Test
+    @DisplayName("파일 삭제 테스트")
+    void 파일_삭제() {
+        // given
+        String filename = "test/images/loopy-goonchim.png";
+        when(amazonS3.doesObjectExist(any(), any())).thenReturn(true);
+
+        // when
+        s3Provider.deleteImage(filename);
+
+        // then
+        verify(amazonS3).doesObjectExist(any(), any());
+        verify(amazonS3).deleteObject(any(), any());
+    }
 }
