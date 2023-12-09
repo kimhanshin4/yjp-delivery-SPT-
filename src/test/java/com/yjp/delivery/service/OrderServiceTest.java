@@ -10,6 +10,7 @@ import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
+import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
 import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetUserRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveRes;
@@ -162,5 +163,31 @@ class OrderServiceTest {
         assertThat(orderGetUserRes.getTotal()).isEqualTo(1);
         assertThat(orderGetUserRes.getOrderGetResWrappers().get(0).getOrderId()).isEqualTo(orderId);
         verify(orderRepository).findByUserEntityUserId(any());
+    }
+
+    @Test
+    @DisplayName("주문 단건 조회 테스트")
+    void 주문_단건_조회() {
+        // given
+        Long orderId = 1L;
+        UserEntity user = UserEntity.builder().build();
+        ShopEntity shop = ShopEntity.builder().build();
+        MenuEntity menu = MenuEntity.builder().shopEntity(shop).build();
+        OrderDetailEntity orderDetail = OrderDetailEntity.builder()
+            .menuEntity(menu)
+            .build();
+        OrderEntity order = OrderEntity.builder()
+            .orderId(orderId)
+            .userEntity(user)
+            .orderDetailEntities(List.of(orderDetail))
+            .build();
+        when(orderRepository.findByOrderId(any())).thenReturn(order);
+
+        // when
+        OrderGetResWrapper orderGetResWrapper = orderService.getOrder(orderId);
+
+        // then
+        assertThat(orderGetResWrapper.getOrderId()).isEqualTo(orderId);
+        verify(orderRepository).findByOrderId(any());
     }
 }
