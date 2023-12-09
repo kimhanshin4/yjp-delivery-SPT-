@@ -9,11 +9,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
 import com.yjp.delivery.controller.order.dto.response.OrderGetRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
 import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
+import com.yjp.delivery.controller.order.dto.response.OrderGetUserRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveResList;
 import com.yjp.delivery.service.OrderService;
@@ -79,6 +81,28 @@ class OrderControllerTest extends BaseMvcTest {
                 get("/v1/order/shops")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(orderGetShopReq)))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("user로 주문 조회 테스트")
+    void user_주문_조회() throws Exception {
+        String menuName = "menu";
+        String shopName = "shop";
+        OrderGetUserReq orderGetUserReq = OrderGetUserReq.builder().build();
+        OrderGetRes orderGetRes = OrderGetRes.builder().menuName(menuName).build();
+        OrderGetResWrapper orderGetResWrapper = OrderGetResWrapper.builder()
+            .shopName(shopName).orderGetReses(List.of(orderGetRes)).build();
+        OrderGetUserRes result = OrderGetUserRes.builder()
+            .orderGetResWrappers(List.of(orderGetResWrapper)).build();
+        when(orderService.getAllOrderByUser(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                get("/v1/order/users")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(orderGetUserReq))
+                    .principal(userMockPrincipal))
             .andDo(print())
             .andExpect(status().isOk());
     }
