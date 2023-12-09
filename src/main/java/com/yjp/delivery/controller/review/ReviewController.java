@@ -11,10 +11,12 @@ import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
 import com.yjp.delivery.controller.review.dto.response.ReviewGetResUser;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
+import com.yjp.delivery.security.UserDetailsImpl;
 import com.yjp.delivery.service.ReviewService;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,31 +36,45 @@ public class ReviewController {
 
 
     @PostMapping
-    public RestResponse<ReviewSaveRes> saveReview(@RequestPart ReviewSaveReq req,
+    public RestResponse<ReviewSaveRes> saveReview(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestPart ReviewSaveReq req,
         @RequestPart MultipartFile multipartFile)
         throws IOException {
+        req.setUsername(userDetails.getUsername());
         return RestResponse.success(reviewService.saveReview(req, multipartFile));
     }
 
     @PatchMapping
-    public RestResponse<ReviewUpdateRes> updateReview(@RequestPart ReviewUpdateReq reviewUpdateReq,
+    public RestResponse<ReviewUpdateRes> updateReview(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestPart ReviewUpdateReq req,
         @RequestPart MultipartFile multipartFile)
         throws IOException {
-        return RestResponse.success(reviewService.updateReview(reviewUpdateReq, multipartFile));
+        req.setUsername(userDetails.getUsername());
+        return RestResponse.success(reviewService.updateReview(req, multipartFile));
     }
 
     @DeleteMapping
-    public RestResponse<ReviewDeleteRes> deleteReview(@RequestBody ReviewDeleteReq req) {
+    public RestResponse<ReviewDeleteRes> deleteReview(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody ReviewDeleteReq req) {
+        req.setUsername(userDetails.getUsername());
         return RestResponse.success(reviewService.deleteReview(req));
     }
 
     @GetMapping("/shops")
-    public RestResponse<List<ReviewGetResShop>> getReviews(@RequestBody ReviewGetReqShop req) {
+    public RestResponse<List<ReviewGetResShop>> getReviews(
+
+        @RequestBody ReviewGetReqShop req) {
         return RestResponse.success(reviewService.findShopReview(req));
     }
 
     @GetMapping("/users")
-    public RestResponse<List<ReviewGetResUser>> getReviews(@RequestBody ReviewGetReqUser req) {
+    public RestResponse<List<ReviewGetResUser>> getReviews(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody ReviewGetReqUser req) {
+        req.setUsername(userDetails.getUsername());
         return RestResponse.success(reviewService.findUserReview(req));
     }
 
