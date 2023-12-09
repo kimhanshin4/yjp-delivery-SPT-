@@ -61,5 +61,4 @@ public class ReviewController {
     public RestResponse<List<ReviewGetResUser>> getReviews(@RequestBody ReviewGetReqUser req) {
         return RestResponse.success(reviewService.findUserReview(req));
     }
-
 }
