@@ -10,5 +10,4 @@ public class ProfileEditReq {
     private Long userId;
     private String username;
     private String introduction;
-    private String profileImageUrl;
 }
