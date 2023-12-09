@@ -95,4 +95,18 @@ class OrderRepositoryTest {
         // then
         assertThat(order).isEqualTo(saveOrder);
     }
+
+    @Test
+    @DisplayName("orderId, username으로 주문 정보 조회 테스트")
+    void orderId_username_주문_정보_조회() {
+        // given
+        Long orderId = saveOrder.getOrderId();
+        String username = "ysys";
+
+        // when
+        OrderEntity order = orderRepository.findByOrderIdAndUserEntityUsername(orderId, username);
+
+        // then
+        assertThat(order).isEqualTo(saveOrder);
+    }
 }
