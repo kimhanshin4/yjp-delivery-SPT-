@@ -2,6 +2,7 @@ package com.yjp.delivery.controller.admin.shop;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -9,8 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.admin.shop.dto.request.AddShopReq;
+import com.yjp.delivery.controller.admin.shop.dto.request.DeleteShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.request.UpdateShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.response.AddShopRes;
+import com.yjp.delivery.controller.admin.shop.dto.response.DeleteShopRes;
 import com.yjp.delivery.controller.admin.shop.dto.response.UpdateShopRes;
 import com.yjp.delivery.service.AdminShopService;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +56,22 @@ class AdminShopControllerTest extends BaseMvcTest {
                 patch("/v1/admin/shop")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(updateShopReq)))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("가게 삭제 테스트")
+    void 가게_삭제() throws Exception {
+        Long shopId = 1L;
+        DeleteShopReq deleteShopReq = DeleteShopReq.builder().shopId(shopId).build();
+        DeleteShopRes result = new DeleteShopRes();
+        when(adminShopService.deleteShop(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                delete("/v1/admin/shop")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(deleteShopReq)))
             .andDo(print())
             .andExpect(status().isOk());
     }
