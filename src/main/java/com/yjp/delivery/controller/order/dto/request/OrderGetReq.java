@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDeleteReq {
+public class OrderGetReq {
 
     private Long orderId;
     private Long userId;

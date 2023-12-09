@@ -2,6 +2,7 @@ package com.yjp.delivery.controller.order;
 
 import com.yjp.delivery.common.response.RestResponse;
 import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
@@ -16,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,16 +51,21 @@ public class OrderController {
         return RestResponse.success(orderService.getAllOrderByUser(orderGetUserReq));
     }
 
-    @GetMapping("/{orderId}")
-    public RestResponse<OrderGetResWrapper> getOrder(@PathVariable Long orderId) {
-        return RestResponse.success(orderService.getOrder(orderId));
+    @GetMapping
+    public RestResponse<OrderGetResWrapper> getOrder(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody OrderGetReq orderGetUserReq) {
+        orderGetUserReq.setUserId(userDetails.getUser().getUserId());
+        orderGetUserReq.setRole(userDetails.getUser().getRole());
+        return RestResponse.success(orderService.getOrder(orderGetUserReq));
     }
 
     @DeleteMapping
     public RestResponse<OrderDeleteRes> deleteOrder(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody OrderDeleteReq orderDeleteReq) {
-        orderDeleteReq.setUsername(userDetails.getUsername());
+        orderDeleteReq.setUserId(userDetails.getUser().getUserId());
+        orderDeleteReq.setRole(userDetails.getUser().getRole());
         return RestResponse.success(orderService.deleteOrder(orderDeleteReq));
     }
 }
