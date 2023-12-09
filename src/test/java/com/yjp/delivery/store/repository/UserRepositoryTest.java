@@ -57,4 +57,17 @@ class UserRepositoryTest {
         // then
         assertThat(user).isEqualTo(saveUser);
     }
+
+    @Test
+    @DisplayName("userId로 유저 조회 테스트")
+    void userId_유저_조회() {
+        // given
+        Long userId = saveUser.getUserId();
+
+        // when
+        UserEntity user = userRepository.findByUserId(userId);
+
+        // then
+        assertThat(user).isEqualTo(saveUser);
+    }
 }
