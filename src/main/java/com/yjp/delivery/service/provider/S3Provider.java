@@ -28,7 +28,7 @@ public class S3Provider {
     }
 
     public String saveFile(MultipartFile multipartFile, String folderName) throws IOException {
-        if (multipartFile == null || multipartFile.getOriginalFilename() == null) {
+        if (multipartFile.isEmpty()) {
             return null;
         }
         String originalFilename = multipartFile.getOriginalFilename();
