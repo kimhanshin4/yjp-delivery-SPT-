@@ -2,13 +2,18 @@ package com.yjp.delivery.controller.order;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yjp.delivery.controller.BaseMvcTest;
+import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
+import com.yjp.delivery.controller.order.dto.response.OrderGetRes;
+import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
+import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveResList;
 import com.yjp.delivery.service.OrderService;
@@ -52,6 +57,28 @@ class OrderControllerTest extends BaseMvcTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(orderSaveReqList))
                     .principal(userMockPrincipal))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("shop으로 주문 조회 테스트")
+    void shop_주문_조회() throws Exception {
+        Long shopId = 1L;
+        String menuName = "menu";
+        String shopName = "shop";
+        OrderGetShopReq orderGetShopReq = OrderGetShopReq.builder().shopId(shopId).build();
+        OrderGetRes orderGetRes = OrderGetRes.builder().menuName(menuName).build();
+        OrderGetResWrapper orderGetResWrapper = OrderGetResWrapper.builder()
+            .shopName(shopName).orderGetReses(List.of(orderGetRes)).build();
+        OrderGetShopRes result = OrderGetShopRes.builder()
+            .orderGetResWrappers(List.of(orderGetResWrapper)).build();
+        when(orderService.getAllOrderByShop(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                get("/v1/order/shops")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(orderGetShopReq)))
             .andDo(print())
             .andExpect(status().isOk());
     }
