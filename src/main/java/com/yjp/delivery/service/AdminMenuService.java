@@ -106,7 +106,5 @@ public class AdminMenuService {
         AddMenuRes toAddMenuRes(MenuEntity menuEntity);
 
         UpdateMenuRes toUpdateMenuRes(MenuEntity menuEntity);
-
-        DeleteMenuRes toDeleteMenuRes(MenuEntity menuEntity);
     }
 }

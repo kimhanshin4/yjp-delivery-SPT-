@@ -53,6 +53,9 @@ public class S3Provider {
     }
 
     public void deleteImage(String originalFilename) {
+        if (originalFilename == null) {
+            return;
+        }
         S3Validator.validate(amazonS3, bucket, originalFilename);
         amazonS3.deleteObject(bucket, originalFilename);
     }
