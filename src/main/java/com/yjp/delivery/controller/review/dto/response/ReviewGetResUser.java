@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ReviewGetResUser {
 
     private Long shopId;
+    private String username;
     private String content;
     private String imageUrl;
 

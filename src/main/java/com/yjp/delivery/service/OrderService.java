@@ -5,6 +5,7 @@ import static com.yjp.delivery.common.meta.OrderStatus.COOKING;
 import com.yjp.delivery.common.validator.OrderValidator;
 import com.yjp.delivery.common.validator.UserValidator;
 import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
@@ -76,16 +77,16 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderGetResWrapper getOrder(Long orderId) {
-        return OrderServiceMapper.INSTANCE.toOrderGetResWrapper(
-            orderRepository.findByOrderId(orderId));
+    public OrderGetResWrapper getOrder(OrderGetReq orderGetUserReq) {
+        OrderEntity order = orderRepository.findByOrderId(orderGetUserReq.getOrderId());
+        OrderValidator.validate(order, orderGetUserReq.getUserId(), orderGetUserReq.getRole());
+        return OrderServiceMapper.INSTANCE.toOrderGetResWrapper(order);
     }
 
     public OrderDeleteRes deleteOrder(OrderDeleteReq orderDeleteReq) {
-        OrderEntity orderEntity = orderRepository.findByOrderIdAndUserEntityUsername(
-            orderDeleteReq.getOrderId(), orderDeleteReq.getUsername());
-        OrderValidator.validate(orderEntity);
-        orderRepository.delete(orderEntity);
+        OrderEntity order = orderRepository.findByOrderId(orderDeleteReq.getOrderId());
+        OrderValidator.validate(order, orderDeleteReq.getUserId(), orderDeleteReq.getRole());
+        orderRepository.delete(order);
         return new OrderDeleteRes();
     }
 

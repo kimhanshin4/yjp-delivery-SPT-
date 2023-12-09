@@ -3,6 +3,7 @@ package com.yjp.delivery.service;
 
 import com.yjp.delivery.common.validator.ReviewValidator;
 import com.yjp.delivery.common.validator.ShopValidator;
+import com.yjp.delivery.common.validator.UserValidator;
 import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqUser;
@@ -74,7 +75,11 @@ public class ReviewService {
         ReviewEntity reviewEntity = reviewRepository.findByReviewIdAndUserEntityUsername(
             req.getReviewId(), req.getUsername());
         ReviewValidator.validate(reviewEntity);
-        String originalFilename = reviewEntity.getImageUrl().replace(url, "");
+        String originalFilename = null;
+        if (reviewEntity.getImageUrl() != null) {
+            originalFilename = reviewEntity.getImageUrl().replace(url, "");
+        }
+
         if (multipartFile != null) {
             imageUrl = s3Provider.updateImage(originalFilename, multipartFile);
         } else {
@@ -98,16 +103,19 @@ public class ReviewService {
         ReviewEntity reviewEntity = reviewRepository.findByReviewIdAndUserEntityUsername(
             req.getReviewId(), req.getUsername());
         ReviewValidator.validate(reviewEntity);
-        String originalFilename = reviewEntity.getImageUrl().replace(url, "");
+        if (reviewEntity.getImageUrl() != null) {
+            String originalFilename = reviewEntity.getImageUrl().replace(url, "");
+            s3Provider.deleteImage(originalFilename);
+        }
+
         reviewRepository.delete(reviewEntity);
-        s3Provider.deleteImage(originalFilename);
         return new ReviewDeleteRes();
     }
 
 
     private UserEntity findUser(String name) {
         UserEntity userEntity = userRepository.findByUsername(name);
-        //UserValidator.validate(userEntity);
+        UserValidator.validate(userEntity);
         return userEntity;
     }
 
@@ -132,6 +140,7 @@ public class ReviewService {
         List<ReviewGetResShop> toReviewGetResShopList(List<ReviewEntity> reviewEntityList);
 
         @Mapping(source = "userEntity", target = "username")
+        @Mapping(source = "shopEntity", target = "shopId")
         ReviewGetResShop toReviewGetResShop(ReviewEntity reviewEntity);
 
         @Mapping(source = "userEntity", target = "username")
@@ -142,6 +151,7 @@ public class ReviewService {
         List<ReviewGetResUser> toReviewGetResUserList(List<ReviewEntity> reviewEntityList);
 
         @Mapping(source = "shopEntity", target = "shopId")
+        @Mapping(source = "userEntity", target = "username")
         ReviewGetResUser toReviewGetResUser(ReviewEntity reviewEntity);
 
         @Mapping(source = "shopEntity", target = "shopId")
