@@ -79,7 +79,7 @@ public class ReviewService {
         if (reviewEntity.getImageUrl() != null) {
             originalFilename = reviewEntity.getImageUrl().replace(url, "");
         }
-        
+
         if (multipartFile != null) {
             imageUrl = s3Provider.updateImage(originalFilename, multipartFile);
         } else {
@@ -103,9 +103,12 @@ public class ReviewService {
         ReviewEntity reviewEntity = reviewRepository.findByReviewIdAndUserEntityUsername(
             req.getReviewId(), req.getUsername());
         ReviewValidator.validate(reviewEntity);
-        String originalFilename = reviewEntity.getImageUrl().replace(url, "");
+        if (reviewEntity.getImageUrl() != null) {
+            String originalFilename = reviewEntity.getImageUrl().replace(url, "");
+            s3Provider.deleteImage(originalFilename);
+        }
+
         reviewRepository.delete(reviewEntity);
-        s3Provider.deleteImage(originalFilename);
         return new ReviewDeleteRes();
     }
 
