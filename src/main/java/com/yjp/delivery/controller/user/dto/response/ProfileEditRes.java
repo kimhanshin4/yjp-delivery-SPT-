@@ -1,8 +1,10 @@
 package com.yjp.delivery.controller.user.dto.response;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class ProfileEditRes {
 
     private String email;
