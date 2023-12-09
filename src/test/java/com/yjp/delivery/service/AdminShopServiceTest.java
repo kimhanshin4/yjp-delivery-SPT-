@@ -6,7 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.controller.admin.shop.dto.request.AddShopReq;
+import com.yjp.delivery.controller.admin.shop.dto.request.UpdateShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.response.AddShopRes;
+import com.yjp.delivery.controller.admin.shop.dto.response.UpdateShopRes;
 import com.yjp.delivery.store.entity.ShopEntity;
 import com.yjp.delivery.store.repository.ShopRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -41,6 +43,37 @@ class AdminShopServiceTest {
 
         // then
         assertThat(addShopRes.getShopName()).isEqualTo(shopName);
+        verify(shopRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("가게 수정 테스트")
+    void 가게_수정() {
+        // given
+        Long shopId = 1L;
+        String shopName = "shop";
+        String updatedShopName = "updatedShop";
+        UpdateShopReq updateShopReq = UpdateShopReq.builder()
+            .shopId(shopId)
+            .shopName(updatedShopName)
+            .build();
+        ShopEntity shop = ShopEntity.builder()
+            .shopId(shopId)
+            .shopName(shopName)
+            .build();
+        ShopEntity updatedShop = ShopEntity.builder()
+            .shopId(shopId)
+            .shopName(updatedShopName)
+            .build();
+        when(shopRepository.findByShopId(any())).thenReturn(shop);
+        when(shopRepository.save(any())).thenReturn(updatedShop);
+
+        // when
+        UpdateShopRes updateShopRes = adminShopService.updateShop(updateShopReq);
+
+        // then
+        assertThat(updateShopRes.getShopName()).isEqualTo(updatedShopName);
+        verify(shopRepository).findByShopId(any());
         verify(shopRepository).save(any());
     }
 }
