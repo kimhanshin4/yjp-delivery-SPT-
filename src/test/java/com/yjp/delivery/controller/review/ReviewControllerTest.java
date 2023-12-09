@@ -8,7 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
+import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
+import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.service.ReviewService;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
 
 @WebMvcTest(controllers = {ReviewController.class})
@@ -60,6 +63,49 @@ class ReviewControllerTest extends BaseMvcTest {
         this.mockMvc
             .perform(
                 multipart("/v1/review")
+                    .file(multipartFile)
+                    .file(req)
+                    .principal(userMockPrincipal))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("리뷰 수정 테스트")
+    void 리뷰_수정() throws Exception {
+        Long reviewId = 1L;
+        Long shopId = 1L;
+        String username = "ysys";
+        String content = "content";
+        ReviewUpdateReq reviewUpdateReq = ReviewUpdateReq.builder()
+            .reviewId(reviewId).shopId(shopId).username(username).content(content).build();
+        String imageUrl = "images/loopy-goonchim.png";
+        Resource fileResource = new ClassPathResource(imageUrl);
+        MockMultipartFile file = new MockMultipartFile(
+            "loopy-goonchim",
+            fileResource.getFilename(),
+            "image/png",
+            fileResource.getInputStream()
+        );
+        MockMultipartFile multipartFile = new MockMultipartFile(
+            "multipartFile",
+            "orig",
+            "multipart/form-data",
+            file.getBytes());
+        String json = objectMapper.writeValueAsString(reviewUpdateReq);
+        MockMultipartFile req = new MockMultipartFile(
+            "req",
+            "json",
+            "application/json",
+            json.getBytes(StandardCharsets.UTF_8));
+
+        ReviewUpdateRes reviewUpdateRes = ReviewUpdateRes.builder()
+            .username(username).content(content).build();
+
+        when(reviewService.updateReview(any(), any())).thenReturn(reviewUpdateRes);
+        this.mockMvc
+            .perform(
+                multipart(HttpMethod.PATCH, "/v1/review")
                     .file(multipartFile)
                     .file(req)
                     .principal(userMockPrincipal))
