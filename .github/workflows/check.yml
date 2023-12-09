@@ -20,7 +20,7 @@ jobs:
           distribution: 'corretto'
 
       - name: make application-prod.yml
-        if: startsWith(github.ref, 'refs/heads/feature/')
+        if: startsWith(github.ref, 'feature/')
         run: |
           cd ./src/main/resources
           touch ./application-prod.yml
