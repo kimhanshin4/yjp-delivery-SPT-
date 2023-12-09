@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqUser;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
@@ -180,5 +181,28 @@ class ReviewServiceTest {
         verify(shopRepository).findByShopId(any());
         verify(reviewRepository).save(any());
         verify(s3Provider).deleteImage(any());
+    }
+
+    @Test
+    @DisplayName("리뷰 삭제 테스트")
+    void 리뷰_삭제() {
+        // given
+        Long reviewId = 1L;
+        String username = "ysys";
+        ReviewDeleteReq reviewDeleteReq = ReviewDeleteReq.builder()
+            .reviewId(reviewId)
+            .username(username)
+            .build();
+        ReviewEntity review = ReviewEntity.builder()
+            .reviewId(reviewId)
+            .build();
+        when(reviewRepository.findByReviewIdAndUserEntityUsername(any(), any())).thenReturn(review);
+
+        // when
+        reviewService.deleteReview(reviewDeleteReq);
+
+        // then
+        verify(reviewRepository).findByReviewIdAndUserEntityUsername(any(), any());
+        verify(reviewRepository).delete(any());
     }
 }
