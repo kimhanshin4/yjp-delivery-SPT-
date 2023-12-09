@@ -36,7 +36,7 @@ public class AdminShopService {
             shopRepository.save(ShopEntity.builder()
                 .shopId(updateShopReq.getShopId())
                 .shopName(updateShopReq.getShopName())
-                .description(shopEntity.getDescription())
+                .description(updateShopReq.getDescription())
                 .location(updateShopReq.getLocation())
                 .callNumber(updateShopReq.getCallNumber())
                 .build()));
