@@ -2,11 +2,13 @@ package com.yjp.delivery.controller.order;
 
 import com.yjp.delivery.common.response.RestResponse;
 import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
-import com.yjp.delivery.controller.order.dto.request.OrderGetAllReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
 import com.yjp.delivery.controller.order.dto.response.OrderDeleteRes;
-import com.yjp.delivery.controller.order.dto.response.OrderGetAllRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
+import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
+import com.yjp.delivery.controller.order.dto.response.OrderGetUserRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveResList;
 import com.yjp.delivery.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +33,16 @@ public class OrderController {
         return RestResponse.success(orderService.saveOrders(orderSaveReqList));
     }
 
-    @GetMapping
-    public RestResponse<OrderGetAllRes> getAllOrder(@RequestBody OrderGetAllReq orderGetAllReq) {
-        if (orderGetAllReq.getShopId() == null) {
-            return RestResponse.success(
-                orderService.getAllOrderByUserId(orderGetAllReq.getUserId()));
-        } else {
-            return RestResponse.success(
-                orderService.getAllOrderByShopId(orderGetAllReq.getShopId()));
-        }
+    @GetMapping("/shops")
+    public RestResponse<OrderGetShopRes> getAllOrderByShop(
+        @RequestBody OrderGetShopReq orderGetShopReq) {
+        return RestResponse.success(orderService.getAllOrderByShop(orderGetShopReq));
+    }
+
+    @GetMapping("/users")
+    public RestResponse<OrderGetUserRes> getAllOrderByUser(
+        @RequestBody OrderGetUserReq orderGetUserReq) {
+        return RestResponse.success(orderService.getAllOrderByUser(orderGetUserReq));
     }
 
     @GetMapping("/{orderId}")

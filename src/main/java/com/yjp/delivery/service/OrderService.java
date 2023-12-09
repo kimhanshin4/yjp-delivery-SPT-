@@ -5,11 +5,14 @@ import static com.yjp.delivery.common.meta.OrderStatus.COOKING;
 import com.yjp.delivery.common.validator.OrderValidator;
 import com.yjp.delivery.common.validator.UserValidator;
 import com.yjp.delivery.controller.order.dto.request.OrderDeleteReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
+import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
 import com.yjp.delivery.controller.order.dto.response.OrderDeleteRes;
-import com.yjp.delivery.controller.order.dto.response.OrderGetAllRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
+import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
+import com.yjp.delivery.controller.order.dto.response.OrderGetUserRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveResList;
 import com.yjp.delivery.service.provider.OrderDetailProvider;
@@ -51,22 +54,22 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderGetAllRes getAllOrderByShopId(Long shopId) {
+    public OrderGetShopRes getAllOrderByShop(OrderGetShopReq orderGetShopReq) {
         List<OrderGetResWrapper> orderGetResWrappers = OrderServiceMapper.INSTANCE.toOrderGetResWrapperList(
-            orderRepository.findByShopId(shopId));
+            orderRepository.findByShopId(orderGetShopReq.getShopId()));
 
-        return OrderGetAllRes.builder()
+        return OrderGetShopRes.builder()
             .orderGetResWrappers(orderGetResWrappers)
             .total(orderGetResWrappers.size())
             .build();
     }
 
     @Transactional(readOnly = true)
-    public OrderGetAllRes getAllOrderByUserId(Long userId) {
+    public OrderGetUserRes getAllOrderByUser(OrderGetUserReq orderGetUserReq) {
         List<OrderGetResWrapper> orderGetResWrappers = OrderServiceMapper.INSTANCE.toOrderGetResWrapperList(
-            orderRepository.findByUserEntityUserId(userId));
+            orderRepository.findByUserEntityUserId(orderGetUserReq.getUserId()));
 
-        return OrderGetAllRes.builder()
+        return OrderGetUserRes.builder()
             .orderGetResWrappers(orderGetResWrappers)
             .total(orderGetResWrappers.size())
             .build();

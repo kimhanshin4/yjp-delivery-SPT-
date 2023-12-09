@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderGetAllReq {
+public class OrderGetShopReq {
 
-    private Long userId;
     private Long shopId;
 }

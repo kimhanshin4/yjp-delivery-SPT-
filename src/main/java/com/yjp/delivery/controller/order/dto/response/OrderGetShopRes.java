@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderGetAllRes {
+public class OrderGetShopRes {
 
     private List<OrderGetResWrapper> orderGetResWrappers;
     private int total;
