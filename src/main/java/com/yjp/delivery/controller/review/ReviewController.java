@@ -77,5 +77,4 @@ public class ReviewController {
         req.setUsername(userDetails.getUsername());
         return RestResponse.success(reviewService.findUserReview(req));
     }
-
 }

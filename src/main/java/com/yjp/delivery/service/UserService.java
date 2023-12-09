@@ -37,7 +37,7 @@ public class UserService {
         throws IOException {
         UserEntity findUser = userRepository.findByUserId(req.getUserId());
         UserValidator.validate(findUser);
-        String filename = findUser.getProfileImageUrl();
+        String filename = getOriginalFilename(findUser);
         String imageUrl;
 
         if (multipartFile != null) {
@@ -60,6 +60,13 @@ public class UserService {
                 .social(findUser.getSocial())
                 .build())
         );
+    }
+
+    private String getOriginalFilename(UserEntity user) {
+        if (user.getProfileImageUrl() == null) {
+            return null;
+        }
+        return user.getProfileImageUrl().replace(url, "");
     }
 
     @Mapper

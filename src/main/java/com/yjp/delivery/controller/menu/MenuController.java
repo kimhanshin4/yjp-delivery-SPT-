@@ -16,10 +16,8 @@ public class MenuController {
 
     private final MenuService menuService;
 
-
     @GetMapping("/{menuId}")
     public RestResponse<MenuGetRes> getMenu(@PathVariable(name = "menuId") Long menuId) {
         return RestResponse.success(menuService.getMenu(menuId));
     }
-
 }
