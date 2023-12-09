@@ -2,13 +2,16 @@ package com.yjp.delivery.controller.review;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yjp.delivery.controller.BaseMvcTest;
+import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
+import com.yjp.delivery.controller.review.dto.response.ReviewDeleteRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.service.ReviewService;
@@ -20,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 @WebMvcTest(controllers = {ReviewController.class})
@@ -108,6 +112,25 @@ class ReviewControllerTest extends BaseMvcTest {
                 multipart(HttpMethod.PATCH, "/v1/review")
                     .file(multipartFile)
                     .file(req)
+                    .principal(userMockPrincipal))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("리뷰 삭제 테스트")
+    void 리뷰_삭제() throws Exception {
+        Long reviewId = 1L;
+        String username = "ysys";
+        ReviewDeleteReq req = ReviewDeleteReq.builder()
+            .reviewId(reviewId).username(username).build();
+        ReviewDeleteRes result = ReviewDeleteRes.builder().reviewId(reviewId).build();
+        when(reviewService.deleteReview(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                delete("/v1/review")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(req))
                     .principal(userMockPrincipal))
             .andDo(print())
             .andExpect(status().isOk());
