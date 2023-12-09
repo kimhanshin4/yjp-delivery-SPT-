@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller;
+package com.yjp.delivery.controller.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yjp.delivery.service.KakaoService;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
-public class UserController {
+public class KakaoController {
 
     private final KakaoService kakaoService;
 
@@ -32,4 +32,5 @@ public class UserController {
     public String kakaoLogout(HttpServletResponse response) {
         return "redirect:/";
     }
+
 }
