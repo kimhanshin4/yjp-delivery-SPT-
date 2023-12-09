@@ -6,12 +6,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.common.meta.OrderStatus;
+import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReqList;
+import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveResList;
 import com.yjp.delivery.service.provider.OrderDetailProvider;
+import com.yjp.delivery.store.entity.MenuEntity;
+import com.yjp.delivery.store.entity.OrderDetailEntity;
 import com.yjp.delivery.store.entity.OrderEntity;
+import com.yjp.delivery.store.entity.ShopEntity;
 import com.yjp.delivery.store.entity.UserEntity;
 import com.yjp.delivery.store.repository.OrderRepository;
 import com.yjp.delivery.store.repository.UserRepository;
@@ -77,5 +82,44 @@ class OrderServiceTest {
         verify(userRepository).findByUsername(any());
         verify(orderRepository).save(any());
         verify(orderDetailProvider).saveOrderDetails(any(), any());
+    }
+
+    @Test
+    @DisplayName("shopId로 주문 정보 조회 테스트")
+    void shopId_주문_정보_조회() {
+        // given
+        Long shopId = 1L;
+        Long orderId = 1L;
+        Long menuId = 1L;
+        Long userId = 1L;
+        OrderGetShopReq orderGetShopReq = OrderGetShopReq.builder()
+            .shopId(shopId)
+            .build();
+        ShopEntity shop = ShopEntity.builder().shopId(shopId).build();
+        MenuEntity menu = MenuEntity.builder().menuId(menuId).shopEntity(shop).build();
+        UserEntity user = UserEntity.builder().userId(userId).build();
+        OrderEntity order = OrderEntity.builder()
+            .orderId(orderId)
+            .userEntity(user)
+            .build();
+        OrderDetailEntity orderDetailEntity = OrderDetailEntity.builder()
+            .orderEntity(order)
+            .menuEntity(menu)
+            .build();
+        order = OrderEntity.builder()
+            .orderId(orderId)
+            .userEntity(user)
+            .orderDetailEntities(List.of(orderDetailEntity))
+            .build();
+        List<OrderEntity> orders = List.of(order);
+        when(orderRepository.findByShopId(any())).thenReturn(orders);
+
+        // when
+        OrderGetShopRes orderGetShopRes = orderService.getAllOrderByShop(orderGetShopReq);
+
+        // then
+        assertThat(orderGetShopRes.getTotal()).isEqualTo(1);
+        assertThat(orderGetShopRes.getOrderGetResWrappers().get(0).getOrderId()).isEqualTo(orderId);
+        verify(orderRepository).findByShopId(any());
     }
 }
