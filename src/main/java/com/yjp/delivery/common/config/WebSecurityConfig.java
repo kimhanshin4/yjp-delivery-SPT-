@@ -53,6 +53,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/v1/user/kakao/**").permitAll()
                 .requestMatchers("/v1/shop/like").hasRole("USER")
                 .requestMatchers("/v1/shop").permitAll()
+                .requestMatchers("/v1/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
