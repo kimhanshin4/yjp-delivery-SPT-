@@ -62,7 +62,5 @@ public class AdminShopService {
         AddShopRes toAddShopRes(ShopEntity shopEntity);
 
         UpdateShopRes toUpdateShopRes(ShopEntity shopEntity);
-
-        DeleteShopRes toDeleteShopRes(ShopEntity shopEntity);
     }
 }
