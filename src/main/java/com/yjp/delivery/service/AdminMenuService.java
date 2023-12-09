@@ -49,10 +49,14 @@ public class AdminMenuService {
         throws IOException {
         ShopEntity shopEntity = findShop(updateMenuReq.getShopId());
         MenuEntity menuEntity = findMenu(updateMenuReq.getMenuId());
-        String originalFilename = menuEntity.getImageUrl().replace(url, "");
+        String originalFilename = getOriginalFilename(menuEntity);
         String imageUrl;
         if (multipartFile != null) {
-            imageUrl = s3Provider.updateImage(originalFilename, multipartFile);
+            if (originalFilename != null) {
+                imageUrl = s3Provider.updateImage(originalFilename, multipartFile);
+            } else {
+                imageUrl = s3Provider.saveFile(multipartFile, "menu");
+            }
         } else {
             imageUrl = menuEntity.getImageUrl();
         }
@@ -69,10 +73,17 @@ public class AdminMenuService {
     public DeleteMenuRes deleteMenu(DeleteMenuReq deleteMenuReq) {
         ShopEntity shopEntity = findShop(deleteMenuReq.getShopId());
         MenuEntity menuEntity = findMenu(deleteMenuReq.getMenuId());
-        String originalFilename = menuEntity.getImageUrl().replace(url, "");
+        String originalFilename = getOriginalFilename(menuEntity);
         s3Provider.deleteImage(originalFilename);
         menuRepository.delete(menuEntity);
         return new DeleteMenuRes();
+    }
+
+    private String getOriginalFilename(MenuEntity menuEntity) {
+        if (menuEntity.getImageUrl() == null) {
+            return null;
+        }
+        return menuEntity.getImageUrl().replace(url, "");
     }
 
     private ShopEntity findShop(Long shopId) {
