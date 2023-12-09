@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.yjp.delivery.store.entity.ReviewEntity;
 import com.yjp.delivery.store.entity.ShopEntity;
 import com.yjp.delivery.store.entity.UserEntity;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,5 +69,18 @@ class ReviewRepositoryTest {
 
         // then
         assertThat(review).isEqualTo(saveReview);
+    }
+
+    @Test
+    @DisplayName("shopId로 리뷰 조회 테스트")
+    void shopId_리뷰_조회() {
+        // given
+        Long shopId = shop.getShopId();
+
+        // when
+        List<ReviewEntity> reviews = reviewRepository.findByShopEntityShopId(shopId);
+
+        // then
+        assertThat(reviews.get(0)).isEqualTo(saveReview);
     }
 }
