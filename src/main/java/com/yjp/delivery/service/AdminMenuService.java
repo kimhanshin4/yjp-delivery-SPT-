@@ -71,7 +71,7 @@ public class AdminMenuService {
     }
 
     public DeleteMenuRes deleteMenu(DeleteMenuReq deleteMenuReq) {
-        ShopEntity shopEntity = findShop(deleteMenuReq.getShopId());
+        findShop(deleteMenuReq.getShopId());
         MenuEntity menuEntity = findMenu(deleteMenuReq.getMenuId());
         String originalFilename = getOriginalFilename(menuEntity);
         s3Provider.deleteImage(originalFilename);
