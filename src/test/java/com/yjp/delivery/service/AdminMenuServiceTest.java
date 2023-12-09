@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yjp.delivery.controller.admin.menu.dto.request.AddMenuReq;
+import com.yjp.delivery.controller.admin.menu.dto.request.DeleteMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.request.UpdateMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.response.AddMenuRes;
 import com.yjp.delivery.controller.admin.menu.dto.response.UpdateMenuRes;
@@ -97,5 +98,29 @@ class AdminMenuServiceTest {
         verify(shopRepository).findByShopId(any());
         verify(menuRepository).findByMenuId(any());
         verify(menuRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("메뉴 삭제 테스트")
+    void 메뉴_삭제() {
+        // given
+        Long menuId = 1L;
+        Long shopId = 1L;
+        DeleteMenuReq deleteMenuReq = DeleteMenuReq.builder()
+            .menuId(menuId)
+            .shopId(shopId)
+            .build();
+        ShopEntity shop = ShopEntity.builder().shopId(shopId).build();
+        MenuEntity menu = MenuEntity.builder().menuId(menuId).shopEntity(shop).build();
+        when(shopRepository.findByShopId(any())).thenReturn(shop);
+        when(menuRepository.findByMenuId(any())).thenReturn(menu);
+
+        // when
+        adminMenuService.deleteMenu(deleteMenuReq);
+
+        // then
+        verify(menuRepository).findByMenuId(any());
+        verify(s3Provider).deleteImage(any());
+        verify(menuRepository).delete(any());
     }
 }
