@@ -54,4 +54,19 @@ class ReviewRepositoryTest {
         // then
         assertThat(review).isEqualTo(saveReview);
     }
+
+    @Test
+    @DisplayName("reviewId, username으로 리뷰 조회 테스트")
+    void reviewId_username_리뷰_조회() {
+        // given
+        Long reviewId = saveReview.getReviewId();
+        String username = "ysys";
+
+        // when
+        ReviewEntity review = reviewRepository.findByReviewIdAndUserEntityUsername(
+            reviewId, username);
+
+        // then
+        assertThat(review).isEqualTo(saveReview);
+    }
 }
