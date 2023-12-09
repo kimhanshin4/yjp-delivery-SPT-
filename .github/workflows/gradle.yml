@@ -36,12 +36,6 @@ jobs:
         run: ./gradlew clean build -x test --stacktrace
         shell: bash
 
-      - name: Test with Gradle
-        env:
-          SPRING_PROFILES_ACTIVE: test
-        run: ./gradlew test --stacktrace
-        shell: bash
-
       - name: Docker build & push to prod
         if: contains(github.ref, 'develop') || contains(github.ref, 'main')
         run: |

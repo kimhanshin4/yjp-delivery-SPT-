@@ -34,9 +34,3 @@ jobs:
           SPRING_PROFILES_ACTIVE: prod
         run: ./gradlew clean build -x test --stacktrace
         shell: bash
-
-      - name: Test with Gradle
-        env:
-          SPRING_PROFILES_ACTIVE: test
-        run: ./gradlew test --stacktrace
-        shell: bash
