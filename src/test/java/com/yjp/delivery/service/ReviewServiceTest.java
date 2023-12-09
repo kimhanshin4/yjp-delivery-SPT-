@@ -8,9 +8,11 @@ import static org.mockito.Mockito.when;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqUser;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
+import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
 import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
 import com.yjp.delivery.controller.review.dto.response.ReviewGetResUser;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
+import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.service.provider.S3Provider;
 import com.yjp.delivery.store.entity.ReviewEntity;
 import com.yjp.delivery.store.entity.ShopEntity;
@@ -126,5 +128,57 @@ class ReviewServiceTest {
         assertThat(reviewGetResUsers.get(0).getUsername()).isEqualTo(username);
         assertThat(reviewGetResUsers.get(0).getShopId()).isEqualTo(shopId);
         verify(reviewRepository).findByUserEntityUsername(any());
+    }
+
+    @Test
+    @DisplayName("리뷰 수정 테스트")
+    void 리뷰_수정() throws IOException {
+        // given
+        Long reviewId = 1L;
+        Long shopId = 1L;
+        String username = "ysys";
+        String content = "content";
+        String updatedContent = "updatedContent";
+        MultipartFile multipartFile = null;
+        ReviewUpdateReq reviewUpdateReq = ReviewUpdateReq.builder()
+            .reviewId(reviewId)
+            .shopId(shopId)
+            .username(username)
+            .content(content)
+            .build();
+        UserEntity user = UserEntity.builder()
+            .username(username)
+            .build();
+        ShopEntity shop = ShopEntity.builder()
+            .shopId(shopId)
+            .build();
+        ReviewEntity review = ReviewEntity.builder()
+            .reviewId(reviewId)
+            .userEntity(user)
+            .shopEntity(shop)
+            .content(content)
+            .build();
+        ReviewEntity updatedReview = ReviewEntity.builder()
+            .reviewId(reviewId)
+            .userEntity(user)
+            .shopEntity(shop)
+            .content(updatedContent)
+            .build();
+        when(reviewRepository.findByReviewIdAndUserEntityUsername(any(), any())).thenReturn(review);
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(shopRepository.findByShopId(shopId)).thenReturn(shop);
+        when(reviewRepository.save(any())).thenReturn(updatedReview);
+
+        // when
+        ReviewUpdateRes reviewUpdateRes = reviewService.updateReview(
+            reviewUpdateReq, multipartFile);
+
+        // then
+        assertThat(reviewUpdateRes.getContent()).isEqualTo(updatedContent);
+        verify(reviewRepository).findByReviewIdAndUserEntityUsername(any(), any());
+        verify(userRepository).findByUsername(any());
+        verify(shopRepository).findByShopId(any());
+        verify(reviewRepository).save(any());
+        verify(s3Provider).deleteImage(any());
     }
 }
