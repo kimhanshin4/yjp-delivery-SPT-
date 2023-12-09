@@ -17,4 +17,3 @@ public class ReviewUpdateReq {
     private String username;
     private String content;
 }
-//{"reviewId":"1","shopId":"1" ,"username" : "Test","content":"살려줘"}
