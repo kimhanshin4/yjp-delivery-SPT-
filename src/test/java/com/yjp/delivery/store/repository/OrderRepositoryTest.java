@@ -82,4 +82,17 @@ class OrderRepositoryTest {
         // then
         assertThat(orders.get(0)).isEqualTo(saveOrder);
     }
+
+    @Test
+    @DisplayName("orderId로 주문 정보 조회 테스트")
+    void orderId_주문_정보_조회() {
+        // given
+        Long orderId = saveOrder.getOrderId();
+
+        // when
+        OrderEntity order = orderRepository.findByOrderId(orderId);
+
+        // then
+        assertThat(order).isEqualTo(saveOrder);
+    }
 }
