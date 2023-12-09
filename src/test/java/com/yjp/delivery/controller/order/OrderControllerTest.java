@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yjp.delivery.controller.BaseMvcTest;
+import com.yjp.delivery.controller.order.dto.request.OrderGetReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetShopReq;
 import com.yjp.delivery.controller.order.dto.request.OrderGetUserReq;
 import com.yjp.delivery.controller.order.dto.request.OrderSaveReq;
@@ -102,6 +103,27 @@ class OrderControllerTest extends BaseMvcTest {
                 get("/v1/order/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(orderGetUserReq))
+                    .principal(userMockPrincipal))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("주문 단건 조회 테스트")
+    void 주문_단건_조회() throws Exception {
+        Long orderId = 1L;
+        String menuName = "menu";
+        String shopName = "shop";
+        OrderGetReq orderGetReq = OrderGetReq.builder().orderId(orderId).build();
+        OrderGetRes orderGetRes = OrderGetRes.builder().menuName(menuName).build();
+        OrderGetResWrapper result = OrderGetResWrapper.builder()
+            .shopName(shopName).orderGetReses(List.of(orderGetRes)).build();
+        when(orderService.getOrder(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                get("/v1/order")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(orderGetReq))
                     .principal(userMockPrincipal))
             .andDo(print())
             .andExpect(status().isOk());
