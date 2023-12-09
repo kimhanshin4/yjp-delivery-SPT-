@@ -44,8 +44,8 @@ class ShopLikeRepositoryTest {
     @DisplayName("user, shop으로 가게 좋아요 정보 조회 테스트")
     void user_shop_가게_좋아요_조회() {
         // given
-        Long userId = 1L;
-        Long shopId = 1L;
+        Long userId = user.getUserId();
+        Long shopId = shop.getShopId();
         UserEntity user = UserEntity.builder().userId(userId).build();
         ShopEntity shop = ShopEntity.builder().shopId(shopId).build();
 

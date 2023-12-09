@@ -34,7 +34,7 @@ class ShopRepositoryTest {
     @DisplayName("shopId로 가게 정보 조회 테스트")
     void shopId_가게_조회() {
         // given
-        Long shopId = 1L;
+        Long shopId = saveShop.getShopId();
 
         // when
         ShopEntity shop = shopRepository.findByShopId(shopId);
