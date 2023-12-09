@@ -11,10 +11,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
+import com.yjp.delivery.controller.review.dto.request.ReviewGetReqUser;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
 import com.yjp.delivery.controller.review.dto.response.ReviewDeleteRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
+import com.yjp.delivery.controller.review.dto.response.ReviewGetResUser;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.service.ReviewService;
@@ -155,6 +157,28 @@ class ReviewControllerTest extends BaseMvcTest {
         this.mockMvc
             .perform(
                 get("/v1/review/shops")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(req))
+                    .principal(userMockPrincipal))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("user로 리뷰 조회 테스트")
+    void user_리뷰_조회() throws Exception {
+        Long shopId = 1L;
+        String username = "ysys";
+        String content = "content";
+        String imageUrl = "url";
+        ReviewGetReqUser req = ReviewGetReqUser.builder().username(username).build();
+        ReviewGetResUser res = ReviewGetResUser.builder()
+            .shopId(shopId).username(username).content(content).imageUrl(imageUrl).build();
+        List<ReviewGetResUser> result = List.of(res);
+        when(reviewService.findUserReview(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                get("/v1/review/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(req))
                     .principal(userMockPrincipal))
