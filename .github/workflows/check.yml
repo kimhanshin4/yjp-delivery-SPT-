@@ -20,7 +20,6 @@ jobs:
           distribution: 'corretto'
 
       - name: make application-prod.yml
-        if: contains(github.head_ref, 'develop') || startsWith(github.head_ref, 'refs/tags/feature')
         run: |
           cd ./src/main/resources
           touch ./application-prod.yml
