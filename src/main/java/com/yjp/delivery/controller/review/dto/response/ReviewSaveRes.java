@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewSaveRes {
 
-    private String name;
+    private String username;
     private String content;
 }

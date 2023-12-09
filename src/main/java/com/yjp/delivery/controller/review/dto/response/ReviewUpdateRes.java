@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewUpdateRes {
 
-    private String name;
+    private String username;
     private String content;
 
 }
