@@ -10,8 +10,10 @@ import com.yjp.delivery.controller.order.dto.response.OrderGetResWrapper;
 import com.yjp.delivery.controller.order.dto.response.OrderGetShopRes;
 import com.yjp.delivery.controller.order.dto.response.OrderGetUserRes;
 import com.yjp.delivery.controller.order.dto.response.OrderSaveResList;
+import com.yjp.delivery.security.UserDetailsImpl;
 import com.yjp.delivery.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +31,9 @@ public class OrderController {
 
     @PostMapping
     public RestResponse<OrderSaveResList> saveOrders(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody OrderSaveReqList orderSaveReqList) {
+        orderSaveReqList.setUsername(userDetails.getUsername());
         return RestResponse.success(orderService.saveOrders(orderSaveReqList));
     }
 
@@ -41,7 +45,9 @@ public class OrderController {
 
     @GetMapping("/users")
     public RestResponse<OrderGetUserRes> getAllOrderByUser(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody OrderGetUserReq orderGetUserReq) {
+        orderGetUserReq.setUserId(userDetails.getUser().getUserId());
         return RestResponse.success(orderService.getAllOrderByUser(orderGetUserReq));
     }
 
@@ -51,7 +57,10 @@ public class OrderController {
     }
 
     @DeleteMapping
-    public RestResponse<OrderDeleteRes> deleteOrder(@RequestBody OrderDeleteReq orderDeleteReq) {
+    public RestResponse<OrderDeleteRes> deleteOrder(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody OrderDeleteReq orderDeleteReq) {
+        orderDeleteReq.setUsername(userDetails.getUsername());
         return RestResponse.success(orderService.deleteOrder(orderDeleteReq));
     }
 }
