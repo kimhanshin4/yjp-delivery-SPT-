@@ -1,0 +1,81 @@
+package com.yjp.delivery.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
+import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
+import com.yjp.delivery.service.provider.S3Provider;
+import com.yjp.delivery.store.entity.ReviewEntity;
+import com.yjp.delivery.store.entity.ShopEntity;
+import com.yjp.delivery.store.entity.UserEntity;
+import com.yjp.delivery.store.repository.ReviewRepository;
+import com.yjp.delivery.store.repository.ShopRepository;
+import com.yjp.delivery.store.repository.UserRepository;
+import java.io.IOException;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.multipart.MultipartFile;
+
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
+class ReviewServiceTest {
+
+    @InjectMocks
+    private ReviewService reviewService;
+
+    @Mock
+    private ReviewRepository reviewRepository;
+    @Mock
+    private ShopRepository shopRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private S3Provider s3Provider;
+
+    @Test
+    @DisplayName("리뷰 저장 테스트")
+    void 리뷰_저장() throws IOException {
+        // given
+        Long shopId = 1L;
+        String username = "ysys";
+        String content = "content";
+        MultipartFile multipartFile = null;
+        String imageUrl = "url";
+        ReviewSaveReq req = ReviewSaveReq.builder()
+            .shopId(shopId)
+            .username(username)
+            .content(content)
+            .build();
+        UserEntity user = UserEntity.builder().username(username).build();
+        ShopEntity shop = ShopEntity.builder().shopId(shopId).build();
+        ReviewEntity review = ReviewEntity.builder()
+            .shopEntity(shop)
+            .userEntity(user)
+            .content(content)
+            .imageUrl(imageUrl)
+            .build();
+        when(s3Provider.saveFile(any(), any())).thenReturn(imageUrl);
+        when(shopRepository.findByShopId(any())).thenReturn(shop);
+        when(userRepository.findByUsername(any())).thenReturn(user);
+        when(reviewRepository.save(any())).thenReturn(review);
+
+        // when
+        ReviewSaveRes reviewSaveRes = reviewService.saveReview(req, multipartFile);
+
+        // then
+        assertThat(reviewSaveRes.getUsername()).isEqualTo(username);
+        assertThat(reviewSaveRes.getContent()).isEqualTo(content);
+        verify(s3Provider).saveFile(any(), any());
+        verify(shopRepository).findByShopId(any());
+        verify(userRepository).findByUsername(any());
+        verify(reviewRepository).save(any());
+    }
+}
