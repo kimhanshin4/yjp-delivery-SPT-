@@ -1,5 +1,6 @@
 package com.yjp.delivery.controller.shop;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,6 +39,19 @@ class ShopControllerTest extends BaseMvcTest {
         this.mockMvc
             .perform(
                 get("/v1/shop"))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("가게 단건 조회 테스트")
+    void 가게_단건_조회() throws Exception {
+        Long shopId = 1L;
+        ShopGetRes result = ShopGetRes.builder().shopId(shopId).build();
+        when(shopService.getShop(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                get("/v1/shop/" + shopId))
             .andDo(print())
             .andExpect(status().isOk());
     }
