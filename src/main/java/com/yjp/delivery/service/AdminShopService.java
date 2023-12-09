@@ -31,7 +31,7 @@ public class AdminShopService {
     }
 
     public UpdateShopRes updateShop(UpdateShopReq updateShopReq) {
-        ShopEntity shopEntity = findShop(updateShopReq.getShopId());
+        findShop(updateShopReq.getShopId());
         return AdminShopServiceMapper.INSTANCE.toUpdateShopRes(
             shopRepository.save(ShopEntity.builder()
                 .shopId(updateShopReq.getShopId())
