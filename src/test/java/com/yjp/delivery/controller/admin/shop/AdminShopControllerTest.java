@@ -2,13 +2,16 @@ package com.yjp.delivery.controller.admin.shop;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.admin.shop.dto.request.AddShopReq;
+import com.yjp.delivery.controller.admin.shop.dto.request.UpdateShopReq;
 import com.yjp.delivery.controller.admin.shop.dto.response.AddShopRes;
+import com.yjp.delivery.controller.admin.shop.dto.response.UpdateShopRes;
 import com.yjp.delivery.service.AdminShopService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,22 @@ class AdminShopControllerTest extends BaseMvcTest {
                 post("/v1/admin/shop")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(addShopReq)))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("가게 수정 테스트")
+    void 가게_수정() throws Exception {
+        String shopName = "shop";
+        UpdateShopReq updateShopReq = UpdateShopReq.builder().shopName(shopName).build();
+        UpdateShopRes result = UpdateShopRes.builder().shopName(shopName).build();
+        when(adminShopService.updateShop(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                patch("/v1/admin/shop")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(updateShopReq)))
             .andDo(print())
             .andExpect(status().isOk());
     }
