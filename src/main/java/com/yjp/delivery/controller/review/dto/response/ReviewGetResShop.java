@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewGetResShop {
 
+    private Long shopId;
     private String username;
     private String content;
     private String imageUrl;
