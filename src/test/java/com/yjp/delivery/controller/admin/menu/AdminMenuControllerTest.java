@@ -8,7 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.admin.menu.dto.request.AddMenuReq;
+import com.yjp.delivery.controller.admin.menu.dto.request.UpdateMenuReq;
 import com.yjp.delivery.controller.admin.menu.dto.response.AddMenuRes;
+import com.yjp.delivery.controller.admin.menu.dto.response.UpdateMenuRes;
 import com.yjp.delivery.service.AdminMenuService;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
 
 @WebMvcTest(controllers = {AdminMenuController.class})
@@ -66,6 +69,54 @@ class AdminMenuControllerTest extends BaseMvcTest {
         this.mockMvc
             .perform(
                 multipart("/v1/admin/menu")
+                    .file(multipartFile)
+                    .file(req))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @DisplayName("메뉴 수정 테스트")
+    void 메뉴_수정() throws Exception {
+        Long menuId = 1L;
+        String menuName = "menu";
+        int price = 10;
+        Long shopId = 1L;
+        UpdateMenuReq updateMenuReq = UpdateMenuReq.builder()
+            .menuId(menuId).menuName(menuName).price(price).shopId(shopId).build();
+        String imageUrl = "images/loopy-goonchim.png";
+        Resource fileResource = new ClassPathResource(imageUrl);
+        MockMultipartFile file = new MockMultipartFile(
+            "loopy-goonchim",
+            fileResource.getFilename(),
+            "image/png",
+            fileResource.getInputStream()
+        );
+        MockMultipartFile multipartFile = new MockMultipartFile(
+            "multipartFile",
+            "orig",
+            "multipart/form-data",
+            file.getBytes());
+        String json = objectMapper.writeValueAsString(updateMenuReq);
+        MockMultipartFile req = new MockMultipartFile(
+            "updateMenuReq",
+            "json",
+            "application/json",
+            json.getBytes(StandardCharsets.UTF_8));
+
+        UpdateMenuRes updateMenuRes = UpdateMenuRes.builder()
+            .menuId(menuId)
+            .imageUrl(imageUrl)
+            .menuName(menuName)
+            .price(price)
+            .shopId(shopId)
+            .build();
+
+        when(adminMenuService.updateMenu(any(), any())).thenReturn(updateMenuRes);
+        this.mockMvc
+            .perform(
+                multipart(HttpMethod.PATCH, "/v1/admin/menu")
                     .file(multipartFile)
                     .file(req))
             .andDo(print())
