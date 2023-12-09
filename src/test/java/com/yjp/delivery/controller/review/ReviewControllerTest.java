@@ -3,19 +3,23 @@ package com.yjp.delivery.controller.review;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yjp.delivery.controller.BaseMvcTest;
 import com.yjp.delivery.controller.review.dto.request.ReviewDeleteReq;
+import com.yjp.delivery.controller.review.dto.request.ReviewGetReqShop;
 import com.yjp.delivery.controller.review.dto.request.ReviewSaveReq;
 import com.yjp.delivery.controller.review.dto.request.ReviewUpdateReq;
 import com.yjp.delivery.controller.review.dto.response.ReviewDeleteRes;
+import com.yjp.delivery.controller.review.dto.response.ReviewGetResShop;
 import com.yjp.delivery.controller.review.dto.response.ReviewSaveRes;
 import com.yjp.delivery.controller.review.dto.response.ReviewUpdateRes;
 import com.yjp.delivery.service.ReviewService;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -129,6 +133,28 @@ class ReviewControllerTest extends BaseMvcTest {
         this.mockMvc
             .perform(
                 delete("/v1/review")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(req))
+                    .principal(userMockPrincipal))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("shop으로 리뷰 조회 테스트")
+    void shop_리뷰_조회() throws Exception {
+        Long shopId = 1L;
+        String username = "ysys";
+        String content = "content";
+        String imageUrl = "url";
+        ReviewGetReqShop req = ReviewGetReqShop.builder().shopId(shopId).build();
+        ReviewGetResShop res = ReviewGetResShop.builder()
+            .shopId(shopId).username(username).content(content).imageUrl(imageUrl).build();
+        List<ReviewGetResShop> result = List.of(res);
+        when(reviewService.findShopReview(any())).thenReturn(result);
+        this.mockMvc
+            .perform(
+                get("/v1/review/shops")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(req))
                     .principal(userMockPrincipal))
