@@ -130,7 +130,7 @@ class ReviewControllerTest extends BaseMvcTest {
         String username = "ysys";
         ReviewDeleteReq req = ReviewDeleteReq.builder()
             .reviewId(reviewId).username(username).build();
-        ReviewDeleteRes result = ReviewDeleteRes.builder().reviewId(reviewId).build();
+        ReviewDeleteRes result = new ReviewDeleteRes();
         when(reviewService.deleteReview(any())).thenReturn(result);
         this.mockMvc
             .perform(
