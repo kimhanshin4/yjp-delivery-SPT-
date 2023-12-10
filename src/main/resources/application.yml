@@ -25,6 +25,22 @@ spring:
     multipart:
       maxFileSize: 10MB
       maxRequestSize: 100MB
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+        registration:
+          kakao:
+            client-id: # REST API Key
+            client-secret: # Client Secret Key
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            redirect-uri: # Redirect URI
+
 
 logging:
   level:
