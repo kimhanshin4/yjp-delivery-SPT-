@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yjp.delivery.common.meta.Role;
 import com.yjp.delivery.common.meta.Social;
-import com.yjp.delivery.controller.sample.dto.response.kakao.KakaoUserInfoGetRes;
+import com.yjp.delivery.controller.user.dto.response.KakaoUserInfoGetRes;
 import com.yjp.delivery.store.entity.UserEntity;
 import com.yjp.delivery.store.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
