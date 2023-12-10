@@ -76,15 +76,14 @@ public class ReviewService {
             req.getReviewId(), req.getUsername());
         ReviewValidator.validate(reviewEntity);
         String originalFilename = null;
-        if (reviewEntity.getImageUrl() != null) {
-            originalFilename = reviewEntity.getImageUrl().replace(url, "");
-        }
-
         if (multipartFile != null) {
-            imageUrl = s3Provider.updateImage(originalFilename, multipartFile);
+            if (originalFilename != null) {
+                imageUrl = s3Provider.updateImage(originalFilename, multipartFile);
+            } else {
+                imageUrl = s3Provider.saveFile(multipartFile, "menu");
+            }
         } else {
-            imageUrl = null;
-            s3Provider.deleteImage(originalFilename);
+            imageUrl = reviewEntity.getImageUrl();
         }
         UserEntity userEntity = findUser(req.getUsername());
         ShopEntity shopEntity = findShop(req.getShopId());
