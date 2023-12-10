@@ -1,16 +1,8 @@
 package com.yjp.delivery.controller.review.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@JsonIgnoreProperties
 public class ReviewDeleteRes {
-
-    private Long reviewId;
 
 }
