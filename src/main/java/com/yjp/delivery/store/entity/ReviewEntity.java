@@ -17,21 +17,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "reviews")
+@Table(name = "review")
 public class ReviewEntity extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long reviewId;
-  private String content;
-  private String imageUrl;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reviewId;
+    private String content;
+    private String imageUrl;
 
-  @ManyToOne
-  @JoinColumn(name = "userId")
-  private UserEntity userEntity;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private UserEntity userEntity;
 
-  @ManyToOne
-  @JoinColumn(name = "shopId")
-  private ShopEntity shopEntity;
+    @ManyToOne
+    @JoinColumn(name = "shopId")
+    private ShopEntity shopEntity;
 
 }

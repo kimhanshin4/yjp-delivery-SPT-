@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "menus")
+@Table(name = "menu")
 public class MenuEntity extends BaseEntity {
 
     @Id
