@@ -16,6 +16,7 @@ import com.yjp.delivery.store.repository.ShopRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -103,8 +104,15 @@ public class AdminMenuService {
 
         AdminMenuServiceMapper INSTANCE = Mappers.getMapper(AdminMenuServiceMapper.class);
 
+        @Mapping(source = "shopEntity", target = "shopId")
+        default Long toShopId(ShopEntity shopEntity) {
+            return shopEntity.getShopId();
+        }
+
+        @Mapping(source = "shopEntity", target = "shopId")
         AddMenuRes toAddMenuRes(MenuEntity menuEntity);
 
+        @Mapping(source = "shopEntity", target = "shopId")
         UpdateMenuRes toUpdateMenuRes(MenuEntity menuEntity);
     }
 }

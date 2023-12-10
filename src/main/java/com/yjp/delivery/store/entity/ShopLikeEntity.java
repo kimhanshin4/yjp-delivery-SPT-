@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @IdClass(ShopLikeEntityId.class)
-@Table(name = "shop_likes")
+@Table(name = "shop_like")
 public class ShopLikeEntity {
 
     @Id

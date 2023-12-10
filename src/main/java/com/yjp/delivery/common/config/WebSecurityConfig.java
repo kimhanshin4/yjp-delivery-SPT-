@@ -52,23 +52,23 @@ public class WebSecurityConfig {
                 .permitAll() // resources 접근 허용 설정
                 .requestMatchers("/").permitAll() // 로그인 페이지 요청 허가
                 .requestMatchers("/v1/user/kakao/**").permitAll() // 카카오 로그인
-                .requestMatchers(HttpMethod.PATCH, "/v1/user").hasRole("USER") // 프로필 수정
-                .requestMatchers(HttpMethod.GET, "/v1/user").permitAll() // 프로필 조회
+                .requestMatchers(HttpMethod.PATCH, "/v1/users").hasRole("USER") // 프로필 수정
+                .requestMatchers(HttpMethod.GET, "/v1/users").permitAll() // 프로필 조회
 
-                .requestMatchers(HttpMethod.POST, "/v1/order").hasRole("USER") // 주문 생성
-                .requestMatchers(HttpMethod.GET, "/v1/order")
+                .requestMatchers(HttpMethod.POST, "/v1/orders").hasRole("USER") // 주문 생성
+                .requestMatchers(HttpMethod.GET, "/v1/orders")
                 .hasAnyRole("USER", "ADMIN") // 주문 단건 조회
-                .requestMatchers("/v1/order/users").hasRole("USER")
-                .requestMatchers("/v1/order/shops").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/v1/order")
+                .requestMatchers("/v1/orders/users").hasRole("USER")
+                .requestMatchers("/v1/orders/shops").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/v1/orders")
                 .hasAnyRole("USER", "ADMIN") // 주문 삭제
 
-                .requestMatchers("/v1/review").hasRole("USER") // 리뷰 생성, 삭제, 수정
-                .requestMatchers("/v1/review/**").permitAll() //가게,유저 전체 리뷰 조회
+                .requestMatchers("/v1/reviews").hasRole("USER") // 리뷰 생성, 삭제, 수정
+                .requestMatchers("/v1/reviews/**").permitAll() //가게,유저 전체 리뷰 조회
 
-                .requestMatchers("/v1/shop").permitAll() //가게 전체 조회
-                .requestMatchers("/v1/shop/{shopId}").permitAll() // 가게 단건 조회
-                .requestMatchers("/v1/shop/like").hasRole("USER") // 가게 좋아요
+                .requestMatchers("/v1/shops").permitAll() //가게 전체 조회
+                .requestMatchers("/v1/shops/{shopId}").permitAll() // 가게 단건 조회
+                .requestMatchers("/v1/shops/like").hasRole("USER") // 가게 좋아요
 
                 .requestMatchers("/v1/menus/{menuId}").permitAll() //메뉴 단건 조회
 

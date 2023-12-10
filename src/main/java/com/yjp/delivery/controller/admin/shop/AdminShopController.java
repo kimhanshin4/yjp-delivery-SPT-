@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/admin/shop")
+@RequestMapping("/v1/admin/shops")
 @RequiredArgsConstructor
 public class AdminShopController {
 

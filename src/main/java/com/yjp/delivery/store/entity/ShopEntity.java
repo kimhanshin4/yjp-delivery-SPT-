@@ -1,5 +1,6 @@
 package com.yjp.delivery.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "shops")
+@Table(name = "shop")
 public class ShopEntity extends BaseEntity {
 
     @Id
@@ -34,4 +35,8 @@ public class ShopEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "shopId", cascade = CascadeType.ALL)
     private List<ShopLikeEntity> shopLikeEntities;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "shopEntity", cascade = CascadeType.ALL)
+    private List<ReviewEntity> reviewEntities;
 }
