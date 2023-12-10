@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,12 @@ public class KakaoService {
 
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String clientId;
+    
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    private String redirectUri;
 
     public String kakaoLogin(String code, HttpServletResponse res) throws JsonProcessingException {
         // Step 1 : 인가 코드로 토큰 요청해서 받기
@@ -58,8 +65,8 @@ public class KakaoService {
         // HTTP Body 생성, 카카오에서 필수적으로 요구하는 헤더와 바디
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "4ccfd58a89c4020d6020300338a9cf15");
-        body.add("redirect_uri", "http://localhost:8080/v1/user/kakao/callback");
+        body.add("client_id", clientId);
+        body.add("redirect_uri", redirectUri);
         body.add("code", code);
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
@@ -33,6 +34,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     private final RestTemplate restTemplate;
     private final UserDetailsService userDetailsService;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String clientId;
 
     @Override
     protected void doFilterInternal(
@@ -90,7 +94,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "refresh_token");
-        body.add("client_id", "4ccfd58a89c4020d6020300338a9cf15");
+        body.add("client_id", clientId);
         body.add("refresh_token", req.getHeader("RefreshToken"));
 
         RequestEntity<MultiValueMap<String, String>> tokenRequestEntity = RequestEntity
