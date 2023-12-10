@@ -1,4 +1,4 @@
-package com.yjp.delivery.controller.sample.dto.request;
+package com.yjp.delivery.controller.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SampleSaveReq {
+public class KakaoUserInfoGetRes {
 
-    private String name;
-    private String text;
+    private Long id;
+    private String nickname;
+    private String email;
 }
